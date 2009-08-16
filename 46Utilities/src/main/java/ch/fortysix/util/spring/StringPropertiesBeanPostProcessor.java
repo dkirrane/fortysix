@@ -5,6 +5,8 @@ package ch.fortysix.util.spring;
 
 import java.lang.reflect.Field;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
@@ -18,22 +20,40 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
  */
 public class StringPropertiesBeanPostProcessor implements BeanPostProcessor {
 
+	static final Logger LOGGER = LoggerFactory
+			.getLogger(StringPropertiesBeanPostProcessor.class);
+
 	private static final String DEFAULT_PROPERTY_PREFIX = "#{";
 	private static final String DEFAULT_PROPERTY_SUFFIX = "}";
 
 	private boolean processAfterInit = false;
 	private boolean processBeforInit = true;
+	private boolean ignoreUnresolvablePlaceholders = false;
 	private String prefix = DEFAULT_PROPERTY_PREFIX;
 	private String suffix = DEFAULT_PROPERTY_SUFFIX;
 
 	private PropertyResolver propertyResolver;
 
 	/**
+	 * The resolver used to get the properties values.
+	 * 
 	 * @param propertyResolver
 	 *            the propertyResolver to set
 	 */
 	public void setPropertyResolver(PropertyResolver propertyResolver) {
 		this.propertyResolver = propertyResolver;
+	}
+
+	/**
+	 * Set to <code>true</code> if an unresolved placeholder/property should not
+	 * cause the processor to fail.
+	 * 
+	 * @param ignoreUnresolvablePlaceholders
+	 *            whether to ignore unresolved placeholders.
+	 */
+	public void setIgnoreUnresolvablePlaceholders(
+			boolean ignoreUnresolvablePlaceholders) {
+		this.ignoreUnresolvablePlaceholders = ignoreUnresolvablePlaceholders;
 	}
 
 	/**
@@ -55,10 +75,11 @@ public class StringPropertiesBeanPostProcessor implements BeanPostProcessor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @seeorg.springframework.beans.factory.config.BeanPostProcessor#
+	 * @see org.springframework.beans.factory.config.BeanPostProcessor#
 	 * postProcessAfterInitialization(java.lang.Object, java.lang.String)
 	 */
-	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+	public Object postProcessAfterInitialization(Object bean, String beanName)
+			throws BeansException {
 		if (processAfterInit) {
 			this.replaceFieldStringValues(bean);
 		}
@@ -84,10 +105,11 @@ public class StringPropertiesBeanPostProcessor implements BeanPostProcessor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @seeorg.springframework.beans.factory.config.BeanPostProcessor#
+	 * @see org.springframework.beans.factory.config.BeanPostProcessor#
 	 * postProcessBeforeInitialization(java.lang.Object, java.lang.String)
 	 */
-	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+	public Object postProcessBeforeInitialization(Object bean, String beanName)
+			throws BeansException {
 		if (processBeforInit) {
 			this.replaceFieldStringValues(bean);
 		}
@@ -111,13 +133,19 @@ public class StringPropertiesBeanPostProcessor implements BeanPostProcessor {
 					String original = (String) fields[i].get(bean);
 
 					// check if we have to replace the value
-					if (original.startsWith(prefix) && original.endsWith(suffix)) {
-						String key = original.substring(prefix.length(), original.length() - suffix.length());
-						String newValue = propertyResolver.resolvePropertyValue(key);
-						if (newValue == null) {
-							throw new IllegalArgumentException("could not replace config property: " + original);
+					if (original.startsWith(prefix)
+							&& original.endsWith(suffix)) {
+						String key = original.substring(prefix.length(),
+								original.length() - suffix.length());
+						String newValue = propertyResolver
+								.resolvePropertyValue(key);
+						if (newValue == null && ignoreUnresolvablePlaceholders) {
+							throw new IllegalArgumentException(
+									"could not replace config property: "
+											+ original);
 						}
-						System.out.println("-->replace [" + original + "] with [" + newValue + "]");
+						LOGGER.info("replace [{}] with [{}]", original,
+								newValue);
 						fields[i].set(bean, newValue);
 					}
 				}
