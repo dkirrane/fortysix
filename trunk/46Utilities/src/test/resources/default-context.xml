@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tool="http://www.springframework.org/schema/tool"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/tool http://www.springframework.org/schema/tool/spring-tool-2.5.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+	<bean id="propReplacer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="properties">
+			<props>
+				<prop key="aKey">#{InjectedName}</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="propertiesProcessor"
+		class="ch.fortysix.util.spring.StringPropertiesBeanPostProcessor">
+		<!--<property name="processAfterInit" value="true" />-->
+		<property name="processBeforInit" value="true" />
+		<property name="propertyResolver" ref="propertyResolver" />
+		<!--<property name="prefix" value="**++"></property>-->
+	</bean>
+
+	<bean id="propertyResolver" class="ch.fortysix.test.service.Service">
+	</bean>
+
+	<bean id="monsterA" class="ch.fortysix.test.domain.Monster">
+		<property name="name" value="${aKey}" />
+		<property name="agressiv" value="false" />
+	</bean>
+
+	<bean id="mouseA" class="ch.fortysix.test.domain.Mouse">
+		<property name="gender" value="MALE" />
+		<property name="hasChild" value="false" />
+		<property name="name" value="SuperMouse" />
+	</bean>
+
+	<bean id="mouseB" class="ch.fortysix.test.domain.Mouse">
+		<property name="gender" value="MALE" />
+		<property name="hasChild" value="false" />
+		<property name="name" value="#{HeroMouse}" />
+	</bean>
+
+	<bean id="zoo" class="ch.fortysix.test.domain.Zoo">
+		<property name="monsters">
+			<util:list>
+				<ref bean="monsterA" />
+			</util:list>
+		</property>
+		<property name="mouses">
+			<util:list>
+				<ref bean="mouseA" />
+				<ref local="mouseB" />
+			</util:list>
+		</property>
+	</bean>
+
+</beans>
