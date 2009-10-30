@@ -1,0 +1,57 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>ch.fortysix</groupId>
+	<artifactId>maven-modify-archive-plugin</artifactId>
+	<packaging>maven-plugin</packaging>
+	<name>ModifyArchive Plugin</name>
+	<version>0.0.1-SNAPSHOT</version>
+	<description>eases the modification of archives (ear, war, zip, jar, ...)&lt;/</description>
+  <build>
+  	<plugins>
+  		<plugin>
+  			<artifactId>maven-plugin-plugin</artifactId>
+  			<version>2.4</version>
+  		</plugin>
+  		<plugin>
+  			<groupId>org.codehaus.mojo.groovy</groupId>
+  			<artifactId>groovy-maven-plugin</artifactId>
+  			<version>1.0-beta-3</version>
+  			<extensions>true</extensions>
+  			<executions>
+  				<execution>
+  					<goals>
+  						<goal>generateStubs</goal>
+  						<goal>compile</goal>
+  						<goal>generateTestStubs</goal>
+  						<goal>testCompile</goal>
+  					</goals>
+  				</execution>
+  			</executions>
+  		</plugin>
+  		<plugin>
+  			<groupId>ch.fortysix</groupId>
+  			<artifactId>mail-maven-plugin</artifactId>
+  			<version>0.0.1-SNAPSHOT</version>
+  			<executions>
+  				<execution>
+  					<id>send a mail</id>
+  					<phase>generate-sources</phase>
+  					<goals>
+  						<goal>send</goal>
+  					</goals>
+  				</execution>
+  			</executions><dependencies><dependency><groupId>org.codehaus.gmaven.runtime</groupId> 
+  <artifactId>gmaven-runtime-1.7</artifactId> <version>1.1-SNAPSHOT</version> 
+    </dependency></dependencies>
+  		</plugin>
+  	</plugins>
+  </build>
+  <dependencies>
+  	<dependency>
+  		<groupId>org.codehaus.mojo.groovy</groupId>
+  		<artifactId>groovy-mojo-support</artifactId>
+  		<version>1.0-beta-3</version>
+  	</dependency>
+  </dependencies>
+</project>
