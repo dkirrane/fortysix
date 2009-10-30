@@ -74,7 +74,6 @@ class MailMojo
         		mailport: mailport, 
         		failonerror:failonerror,
         		tolist: tolist){
-
     	}
     }
 }
