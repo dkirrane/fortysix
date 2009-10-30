@@ -6,7 +6,13 @@
 	<packaging>maven-plugin</packaging>
 	<name>mail plugin</name>
 	<version>0.0.1-SNAPSHOT</version>
-	<description>enables conditional mailsending in a build</description>
+	<description>Enables conditional sending of mails in a build</description>
+	<distributionManagement>
+		<site>
+			<id>fortysix.ch</id>
+			<url>ftp://doc.fortysix.ch/subdomains/doc/httpdocs/maven/maven-postman-plugin</url>
+		</site>
+	</distributionManagement>
 	<dependencies>
 		<dependency>
 			<groupId>org.codehaus.gmaven</groupId>
@@ -43,26 +49,32 @@
 				</executions>
 			</plugin>
 		</plugins>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ftp</artifactId>
+				<version>1.0-beta-5</version>
+			</extension>
+		</extensions>
 	</build>
-    <repositories>
-        <repository>
-            <id>codehaus.org</id>
-            <name>Maven Central Development Repository</name>
-            <url>http://snapshots.repository.codehaus.org</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>codehaus.org</id>
-            <name>Maven Central Development Plugin Repository</name>
-            <url>http://snapshots.repository.codehaus.org</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </pluginRepository>
-    </pluginRepositories>	
+	<repositories>
+		<repository>
+			<id>codehaus.org</id>
+			<name>Maven Central Development Repository</name>
+			<url>http://snapshots.repository.codehaus.org</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>codehaus.org</id>
+			<name>Maven Central Development Plugin Repository</name>
+			<url>http://snapshots.repository.codehaus.org</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</pluginRepository>
+	</pluginRepositories>
 </project>
