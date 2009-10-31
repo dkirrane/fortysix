@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>ch.fortysix</groupId>
+	<artifactId>SimpleTester</artifactId>
+
+	<version>0.0.1-SNAPSHOT</version>
+	<name>SimpleTester</name>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>ch.fortysix</groupId>
+				<artifactId>maven-postman-plugin</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+				<configuration>
+					<from>domi@fortysix.ch</from>
+					<subject>a subject</subject>
+					<message>some text</message>
+					<recivers>
+						<reciver>domi@du.com</reciver>
+						<reciver>ddad@du.com</reciver>
+					</recivers>
+				</configuration>
+				<executions>
+					<execution>
+						<id>do</id>
+						<phase>package</phase>
+						<goals>
+							<goal>send</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
