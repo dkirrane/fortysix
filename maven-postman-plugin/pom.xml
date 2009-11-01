@@ -4,14 +4,40 @@
 	<groupId>ch.fortysix</groupId>
 	<artifactId>maven-postman-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
-	<name>Postman</name>
+	<name>Postman mail plugin</name>
 	<version>0.0.1-SNAPSHOT</version>
 	<description>Enables conditional sending of mails in a build</description>
-	<!--
-		<distributionManagement> <site> <id>fortysix.ch</id>
-		<url>ftp://doc.fortysix.ch/subdomains/doc/httpdocs/maven/maven-postman-plugin</url>
-		</site> </distributionManagement>
-	-->
+	<url>http://doc.fortysix.ch/maven/maven-postman-plugin</url>
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+			<comments>A business-friendly OSS license</comments>
+		</license>
+	</licenses>
+	<scm>
+		<connection>scm:svn:https://fortysix.googlecode.com/svn/trunk/maven-postman-plugin</connection>
+		<developerConnection>scm:svn:https://fortysix.googlecode.com/svn/trunk/maven-postman-plugin</developerConnection>
+		<url>http://fortysix.googlecode.com/svn/trunk/maven-postman-plugin</url>
+	</scm>
+	<developers>
+		<developer>
+			<id>domi</id>
+			<name>Dominik Bartholdi</name>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<organization>-</organization>
+			<timezone>-1</timezone>
+		</developer>
+	</developers>
+	<distributionManagement>
+		<site>
+			<id>fortysix.ch</id>
+			<url>ftp://doc.fortysix.ch/subdomains/doc/httpdocs/maven/maven-postman-plugin</url>
+		</site>
+	</distributionManagement>
 	<dependencies>
 		<dependency>
 			<groupId>org.codehaus.gmaven</groupId>
@@ -97,6 +123,19 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-plugin-plugin</artifactId>
+				<version>2.5.1</version>
+				<executions>
+					<execution>
+						<id>generated-helpmojo</id>
+						<goals>
+							<goal>helpmojo</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 		<extensions>
 			<extension>
@@ -126,4 +165,15 @@
 			</releases>
 		</pluginRepository>
 	</pluginRepositories>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.1.2</version>
+				<reportSets>
+				</reportSets>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>
