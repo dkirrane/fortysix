@@ -1,12 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ch.fortysix</groupId>
 	<artifactId>maven-postman-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
 	<name>Postman mail plugin</name>
 	<version>0.0.1-SNAPSHOT</version>
-	<description>Enables conditional sending of mails in a build</description>
+	<description>Enables conditional sending of mails in a build. The purpose of the plugin is to support conditional emailing (e.g. send an email if a file contains a certain string or there like)</description>
 	<url>http://doc.fortysix.ch/maven/maven-postman-plugin</url>
 	<licenses>
 		<license>
@@ -37,6 +36,16 @@
 			<id>fortysix.ch</id>
 			<url>ftp://doc.fortysix.ch/subdomains/doc/httpdocs/maven/maven-postman-plugin</url>
 		</site>
+		<repository>
+			<id>fortysix-releases</id>
+			<name>Staging Repository</name>
+			<url>http://oss.sonatype.org/content/groups/fortysix-with-staging</url>
+		</repository>
+		<snapshotRepository>
+			<id>fortysix-snapshots</id>
+			<name>Snapshot Repository</name>
+			<url>http://oss.sonatype.org/content/repositories/fortysix-snapshots</url>
+		</snapshotRepository>
 	</distributionManagement>
 	<dependencies>
 		<dependency>
@@ -99,13 +108,9 @@
 	<build>
 		<plugins>
 			<!--
-				<plugin> <groupId>org.codehaus.gmaven</groupId>
-				<artifactId>gmaven-plugin</artifactId>
-				<version>1.1-SNAPSHOT</version> <extensions>true</extensions>
-				<executions> <execution> <goals> <goal>generateStubs</goal>
-				<goal>compile</goal> <goal>generateTestStubs</goal>
-				<goal>testCompile</goal> </goals> </execution> </executions>
-				</plugin>
+				<plugin> <groupId>org.codehaus.gmaven</groupId> <artifactId>gmaven-plugin</artifactId> <version>1.1-SNAPSHOT</version>
+				<extensions>true</extensions> <executions> <execution> <goals> <goal>generateStubs</goal> <goal>compile</goal> <goal>generateTestStubs</goal>
+				<goal>testCompile</goal> </goals> </execution> </executions> </plugin>
 			-->
 			<plugin>
 				<groupId>org.codehaus.mojo.groovy</groupId>
