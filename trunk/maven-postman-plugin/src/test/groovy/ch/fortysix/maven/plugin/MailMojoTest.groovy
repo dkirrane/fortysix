@@ -26,12 +26,12 @@ public class MailMojoTest extends AbstractMojoTestCase {
 	 */
 	public void testSend() throws Exception {
 
-		int port = 1026
+		int port = 1025
 		def fixture = new EmailFixture(port)
 		def from = 'domi@fortysix.ch'
 		def subject = 'a subject'
 		
-        File testPom = new File( getBasedir(), "test-pom.xml" )
+        File testPom = getTestFile("test-pom.xml")
         MailMojo mojo = (MailMojo) lookupMojo ("send", testPom )
         assertNotNull( mojo )
 		mojo.mailhost = "localhost"
@@ -40,6 +40,6 @@ public class MailMojoTest extends AbstractMojoTestCase {
 		mojo.subject = subject
         mojo.execute()
 
-		fixture.assertEmailArrived(from, subject)        
+		fixture.assertEmailArrived(from, 'domi@du.com', subject)        
     }
 }

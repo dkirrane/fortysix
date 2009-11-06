@@ -11,11 +11,12 @@ public class EmailFixture {
         wiser.start()
     }
 
-    def assertEmailArrived(String from, String subject) {
+    def assertEmailArrived(String from, String to, String subject) {
         wiser.stop()
         assert wiser.messages.size() != 0, 'No messages arrived!'
         def message = wiser.messages[0].mimeMessage
         Assert.assertEquals(from, message?.from[0].toString())
+        Assert.assertNotNull(message.getAllRecipients().find{it.toString() == to})
         Assert.assertEquals(subject, message?.subject)
     }
 
