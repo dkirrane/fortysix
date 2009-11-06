@@ -58,22 +58,13 @@ class MailMojo
     void execute() {
     	log.info("seding mail...")
     	
-    	
-    	def tolist = ""
-    	recivers.each{ it ->
-    		log.info it
-    		tolist = it+","+tolist
-    	}
-
-    	log.info tolist
-    	
-        ant.mail(from: from, 
+    	MailSender sender = new MailSender(from: from, 
         		subject: subject, 
         		message: message, 
         		mailhost: mailhost, 
         		mailport: mailport, 
         		failonerror:failonerror,
-        		tolist: tolist){
-    	}
+        		recivers: recivers)
+    	sender.sendMail()
     }
 }

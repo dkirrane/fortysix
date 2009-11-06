@@ -11,20 +11,21 @@ package ch.fortysix.maven.plugin;
 	private AntBuilder ant = new AntBuilder()
 	
 	String mailhost
-	int mailport
+	String mailport
 	String subject
 	String from
 	String cc
-	String to
+//	String to
 	String message
-
-	List recivers = ["domi5@dodo.ch", "domi4@dodo.ch", "domi3@dodo.ch", "domi2@dodo.ch", "domi1@dodo.ch" ]
+	List recivers
+	boolean failonerror
 
 	void sendMail(){
-
 	    
-		ant.mail(mailhost:mailhost, mailport:"$mailport",
-		         subject:subject){
+		ant.mail(mailhost: mailhost, 
+				 mailport: mailport,
+		         subject: subject,
+		         failonerror: failonerror){
 			
 			recivers.each{
 					to(address:it)
