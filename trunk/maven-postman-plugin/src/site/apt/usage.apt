@@ -1,18 +1,24 @@
  ------
  Usage
  ------
- Jason van Zyl
+ Dominik Bartholdi
  ------
- 27 November 2006
+ 7 November 2009
  ------
 
 Usage
 
- This plugin is used to create miraculously transform your build!
+ This plugin is used to send mails if a serten condition is met during the build.
+
  
-*How to miraculously transform your build
+
  
- Describe here how you miraculously transform peoples' builds! 
+*Check a file for some text or a pattern
+ 
+ This configuration checks the file  <<<${project.build.directory}/some.xml>>> for the occurrence of the text <<<some text>>>.
+ Insted of <<<text>>>, <<<regex>>> can be used to define a pattern which must occurre in the file. 
+ <<<sendOnMatch>>> is set to the default 'true', but if you want to send a messeage (mail) if the pattern is not found in the file, 
+ set this one to false.
 
 -------------------
 
@@ -27,6 +33,7 @@ Usage
 					<subject>a subject</subject>
 					<message>some text</message>
 					<text>maven-postman</text>
+					<sendOnMatch>true</sendOnMatch>
 					<fileToTest>${project.build.directory}/some.xml</fileToTest>
 					<recivers>
 						<reciver>dan@test.com</reciver>
