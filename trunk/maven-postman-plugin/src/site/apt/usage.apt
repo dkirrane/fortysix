@@ -1,0 +1,47 @@
+ ------
+ Usage
+ ------
+ Jason van Zyl
+ ------
+ 27 November 2006
+ ------
+
+Usage
+
+ This plugin is used to create miraculously transform your build!
+ 
+*How to miraculously transform your build
+ 
+ Describe here how you miraculously transform peoples' builds! 
+
+-------------------
+
+			<plugin>
+				<groupId>ch.fortysix</groupId>
+				<artifactId>maven-postman-plugin</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+				<configuration>
+					<mailhost>mail.organization.com</mailhost>
+					<mailport>25</mailport>
+					<from>build@server.org</from>
+					<subject>a subject</subject>
+					<message>some text</message>
+					<text>maven-postman</text>
+					<fileToTest>${project.build.directory}/some.xml</fileToTest>
+					<recivers>
+						<reciver>dan@test.com</reciver>
+						<reciver>fan@orga.org</reciver>
+					</recivers>
+				</configuration>
+				<executions>
+					<execution>
+						<id>do</id>
+						<phase>package</phase>
+						<goals>
+							<goal>send</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+-------------------
