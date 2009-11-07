@@ -17,6 +17,8 @@
 					<from>domi@fortysix.ch</from>
 					<subject>a subject</subject>
 					<message>some text</message>
+					<text>maven-postman</text>
+					<fileToTest>test-pom.xml</fileToTest>
 					<recivers>
 						<reciver>domi@du.com</reciver>
 						<reciver>ddad@du.com</reciver>

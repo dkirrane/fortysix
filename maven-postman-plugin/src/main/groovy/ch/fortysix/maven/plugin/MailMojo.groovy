@@ -1,5 +1,7 @@
 package ch.fortysix.maven.plugin
 
+import java.io.File;
+
 import org.codehaus.gmaven.mojo.GroovyMojo;
 
 /**
@@ -39,7 +41,7 @@ class MailMojo
 
     /**
      * flag to indicate whether to halt the build on any error. The default value is true.
-     * @parameter expression="${failonerror}" default-value="true"
+     * @parameter default-value="true"
      */
     boolean failonerror = true;
 
@@ -55,16 +57,77 @@ class MailMojo
      */
     String mailport;
 
+
+    /**
+     * Should the message be send in case the text/regex was found or when it was not found?
+     * @parameter expression="${sendOnMatch}" default-value="true"
+     */
+	boolean sendOnMatch = true
+
+    /**
+     * The file to make the test on.
+     * @parameter 
+     * @required
+     */	
+	File fileToTest
+
+    /**
+     * Text to be searched for in the file.
+     * Either 'text' or 'regex' must be given.
+     * @parameter 
+     */
+	String text
+
+    /**
+     * Regex to check the text in the file with.
+     * Either 'text' or 'regex' must be given.
+     * @parameter 
+     */
+	String regex
+	
+
     void execute() {
+		validate()
     	log.info("seding mail...")
-    	
-    	MailSender sender = new MailSender(from: from, 
-        		subject: subject, 
-        		message: message, 
-        		mailhost: mailhost, 
-        		mailport: mailport, 
-        		failonerror:failonerror,
-        		recivers: recivers)
-    	sender.sendMail()
+
+    	try{
+    		if(log.isDebugEnabled()){
+    			
+    		}
+    		
+	    	FileContainsVoter voter = new FileContainsVoter(
+						fileToTest: fileToTest,
+						text: text,
+						regex: regex,
+						voteTrueOnPositiveTest: sendOnMatch
+					)
+	
+	    	if(voter.vote()){
+		    	MailSender sender = new MailSender(from: from, 
+		        		subject: subject, 
+		        		message: message, 
+		        		mailhost: mailhost, 
+		        		mailport: mailport, 
+		        		failonerror:failonerror,
+		        		recivers: recivers)
+		    	sender.sendMail()
+	    	}
+	    	
+    	}catch (Exception e) {
+			log.error("failed executing postman plugin", e)
+			if(!failonerror){
+				throw e
+			}
+		}
     }
+
+
+	void validate(){
+		if(!text && !regex){
+			throw new IllegalArgumentException("[postman]: 'text' or 'regex' must be given");
+		}
+		if(text && regex){
+			throw new IllegalArgumentException("[postman]: only one of 'text' or 'regex' must be given");
+		}		
+	}
 }
