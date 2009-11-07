@@ -1,20 +1,18 @@
  ------
  Introduction
  ------
- Jason van Zyl
+ Dominik Bartholdi
  ------
- 27 November 2006
+ 7 November 2009
  ------
 
 Maven 2 SuperDuper Plugin
 
-  This plugin is used to transform your development life. Don't bother with self-help
-  books on how to get over your build-time blues. Just use this plugin and
-  everything will miraculously change.
+  This plugin is used to send mails if a serten condition is met during the build.
 
 * Goals Overview
 
-  * {{{superduper-transform.html}superduper:transform}} performs the miraculous build transformation.
+  * {{{send-mojo.html}postman:send}} send a message if the defined conditions are met.
 
   []
 
@@ -22,9 +20,4 @@ Maven 2 SuperDuper Plugin
 
   Instructions on how to use the SuperDuper Plugin can be found {{{usage.html}here}}.
 
-* Examples
 
-  To provide you with better understanding of some usages of the SuperDuper Plugin,
-  you can take a look at the following examples:
-
-  * {{{examples/sample-example.html}Sample Example}}
