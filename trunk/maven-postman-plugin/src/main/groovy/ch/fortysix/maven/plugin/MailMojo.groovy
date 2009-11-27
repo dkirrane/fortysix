@@ -37,7 +37,7 @@ class MailMojo
      * @parameter 
      * @required
      */
-    List recivers;
+    List tos;
 
     /**
      * flag to indicate whether to halt the build on any error. The default value is true.
@@ -109,7 +109,7 @@ class MailMojo
 		        		mailhost: mailhost, 
 		        		mailport: mailport, 
 		        		failonerror:failonerror,
-		        		recivers: recivers)
+		        		recivers: tos)
 		    	sender.sendMail()
 	    	}
 	    	
