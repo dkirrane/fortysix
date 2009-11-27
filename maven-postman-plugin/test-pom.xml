@@ -19,10 +19,10 @@
 					<message>some text</message>
 					<text>maven-postman</text>
 					<fileToTest>test-pom.xml</fileToTest>
-					<recivers>
-						<reciver>domi@du.com</reciver>
-						<reciver>ddad@du.com</reciver>
-					</recivers>
+					<tos>
+						<to>domi@du.com</to>
+						<to>ddad@du.com</to>
+					</tos>
 				</configuration>
 				<executions>
 					<execution>
