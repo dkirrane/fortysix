@@ -4,13 +4,13 @@ package ch.fortysix.maven.plugin;
  * @author Domi
  *
  */
-class RuleResultInfo {
+class RuleResultSet {
 	
 	public Rule rule
 	
-	private Map results = new HashMap()
+	public Map results = new HashMap()
 	
-	def addMessage(String cause, String info){
+	def addResult(String cause, String info){
 		results.put cause, info
 	}
 	

@@ -9,9 +9,21 @@ import org.codehaus.gmaven.mojo.GroovyMojo;
 /**
  * Mojo traversing and parsing files
  *
- * @goal walk
+ * @goal deliver
  */
 class FileWalkerMojo extends GroovyMojo {
+	
+	/**
+	 * Host name of the SMTP server. The default value is localhost.
+	 * @parameter expression="${postman.mailhost}" default-value="localhost"
+	 */
+	String mailhost;
+	
+	/**
+	 * TCP port of the SMTP server. The default value is 25.
+	 * @parameter expression="${postman.mailport}" default-value="25"
+	 */
+	String mailport;	
 	
 	/**
 	 * A list of <code>fileSet</code> rules to select files and directories.
@@ -20,66 +32,123 @@ class FileWalkerMojo extends GroovyMojo {
 	 */
 	private List filesets
 	
-	boolean voteTrueOnPositiveTest = true
-	
 	/**
 	 * A list of <code>rule</code> elements defining when and where to send a message
-	 *
+	 * <pre>
+	 * <rules>								
+	 * 	<rule>
+	 * 		<regex>.*(author).*</regex>
+	 * 	 	<recivers>	 
+	 * 		  <reciver>dude@xx.com</reciver>
+	 * 		  <reciver>sam@yy.com</reciver>
+	 * 	 	</recivers>
+	 * 	</rule>
+	 * </rules>
+	 * </pre>
 	 * @parameter
 	 * @required
 	 */	
 	private List rules
+	
+	/**
+	 * flag to indicate whether to halt the build on any error. The default value is true.
+	 * @parameter default-value="true"
+	 */
+	boolean failonerror = true;
+	
+	/**
+	 * Email address of sender.
+	 * @parameter expression="${postman.from}" 
+	 * @required
+	 */
+	String from;	
 	
 	
 	private List results = new ArrayList()
 	
 	void execute() {
 		
+		// prepare the messages for the recivers
+		Map recivers2Msg = new HashMap()
+		rules*.recivers*.each{ 
+			recivers2Msg.put( it, new Message()	) 
+		}
+		
 		FileSetManager fileSetManager = new FileSetManager(getLog())
-		rules.each{ 
+		rules.each{ rule ->
 			
-			getLog().debug "evaluate rule: $it"
-			def rule = it
+			getLog().debug "evaluate rule: $rule"
 			// one message for each rule
-			def result = new RuleResultInfo(rule: rule)
+			def resultSet = new RuleResultSet(rule: rule)
 			
 			filesets.each{
 				def allIncludes = convertToFileList(it.getDirectory(), fileSetManager.getIncludedFiles( it ))
-				allIncludes .each{
-					getLog().debug "get matches for $it"
-					List matches = getMatches(rule.regex, it)
-					if(matches.size() > 0){
+				allIncludes.each{ oneFile ->
+					getLog().debug "get matches in $oneFile"
+					List matches = getMatches(rule.regex, oneFile)
+					if(matches){
 						
 						// we found matches in the file, save the info
-						def info = ""
-						matches.each{  
-							println "Found in file: $it"
-							info << it << "\n"
+						def info = new StringBuilder()
+						matches.eachWithIndex { txt, i ->
+							def id = i+1
+							getLog().info "Found in file: $txt"
+							info << "$id - $txt\n"
 						}
-						result.addMessage it.name, info
+						resultSet.addResult oneFile.getCanonicalPath(), info.toString()
 						
 					}
 				}
 			}
 			
-			results.add result
+			// add the result to each reciver's (of this rule) message
+			rule.recivers.each{
+				recivers2Msg.get(it)?.resultSets?.add(resultSet)
+			}
 			
 		}
 		
-		Set messageRecivers = new HashSet()
-		
-		def l = (rules*.recivers) 
-		
-		println "L="+l.class
-		
-		def s = l as Set
-		println "S="+s.class
-		
-		l.unique().each{
-			println "**************->"+it
+		//send all the messages to the recivers
+		recivers2Msg.each { key, message ->
+			sendMsg(key, message)
 		}
 		
 		
+	}
+	
+	
+	/**
+	 * sends a message
+	 */
+	def sendMsg = { to, message ->
+		
+		def msgBody = new StringBuilder()
+		message.resultSets*.each{ resultSet ->
+			
+			// add rule teaser
+			msgBody << "Results for rule:" << resultSet.rule?.definition() << "\n"
+			
+			// add results for rule
+			resultSet.results.each{file, text -> 
+				msgBody << "$file:\n$text\n"
+			}
+		}
+		
+		println msgBody
+		
+		List tos = new ArrayList()
+		tos.add to
+		
+		MailSender sender = new MailSender(recivers: tos, 
+		subject: message.subject, 
+		message: msgBody, 
+		mailhost: this.mailhost, 
+		mailport: this.mailport, 
+		failonerror: this.failonerror,
+		from: this.from
+		)
+		
+		sender.sendMail()
 	}
 	
 	
