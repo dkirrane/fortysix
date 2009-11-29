@@ -8,11 +8,11 @@
 
 Maven 2 SuperDuper Plugin
 
-  This plugin is used to send mails if a serten condition is met during the build.
+  This plugin is used to send mails if a certain condition is met during the build.
 
 * Goals Overview
 
-  * {{{send-mojo.html}postman:send}} send a message if the defined conditions are met.
+  * {{{send-mojo.html}postman:deliver}} send a message if the defined conditions are met.
 
   []
 

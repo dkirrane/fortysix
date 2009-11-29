@@ -8,45 +8,65 @@
 
 Usage
 
- This plugin is used to send mails if a serten condition is met during the build.
+ This plugin is used to send mails if a certain condition is met during the build.
 
  
 
  
-*Check a file for some text or a pattern
+*Check a file for a pattern and send messages
  
- This configuration checks the file  <<<${project.build.directory}/some.xml>>> for the occurrence of the text <<<some text>>>.
- Insted of <<<text>>>, <<<regex>>> can be used to define a pattern which must occurre in the file. 
+ This configuration checks all the java files beneath <<<${basedir}/src/main>>> for the occurrence of the regex expressions of each rule.
+ The <<<<regex>>>> tag can be used to define an expression to be searched for. 
  <<<sendOnMatch>>> is set to the default 'true', but if you want to send a messeage (mail) if the pattern is not found in the file, 
  set this one to false.
 
 -------------------
 
+		<plugins>
 			<plugin>
 				<groupId>ch.fortysix</groupId>
 				<artifactId>maven-postman-plugin</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
-				<configuration>
-					<mailhost>mail.organization.com</mailhost>
-					<mailport>25</mailport>
-					<from>build@server.org</from>
-					<subject>a subject</subject>
-					<message>some text</message>
-					<text>maven-postman</text>
-					<sendOnMatch>true</sendOnMatch>
-					<fileToTest>${project.build.directory}/some.xml</fileToTest>
-					<recivers>
-						<reciver>dan@test.com</reciver>
-						<reciver>fan@orga.org</reciver>
-					</recivers>
-				</configuration>
+				<version>0.0.2-SNAPSHOT</version>
 				<executions>
 					<execution>
-						<id>do</id>
+						<id>parse files</id>
 						<phase>package</phase>
 						<goals>
-							<goal>send</goal>
+							<goal>deliver</goal>
 						</goals>
+						<inherited>false</inherited>
+						<configuration>
+							<from>domi@fortysix.ch</from>
+							<filesets>
+								<fileset>
+									<directory>${basedir}/src/main</directory>
+									<includes>
+										<include>**/*.java</include>
+									</includes>
+								</fileset>
+							</filesets>
+							<rules>
+								<rule>
+									<regex>.*(Hello).*</regex>
+									<recivers>
+										<reciver>domi0@xx.com</reciver>
+									</recivers>
+								</rule>
+								<rule>
+									<regex>.*(Domi).*</regex>
+									<recivers>
+										<reciver>domi0@xx.com</reciver>
+										<reciver>domi1@xx.com</reciver>
+									</recivers>
+								</rule>
+								<rule>
+									<regex>(out)</regex>
+									<recivers>
+										<reciver>dude@xx.com</reciver>
+									</recivers>
+								</rule>
+							</rules>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
