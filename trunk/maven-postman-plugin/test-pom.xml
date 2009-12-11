@@ -16,13 +16,6 @@
 					<!--<mailport>25</mailport>-->
 					<from>domi@fortysix.ch</from>
 					<subject>a subject</subject>
-					<message>some text</message>
-					<text>maven-postman</text>
-					<fileToTest>test-pom.xml</fileToTest>
-					<tos>
-						<to>domi@du.com</to>
-						<to>ddad@du.com</to>
-					</tos>
 				</configuration>
 				<executions>
 					<execution>
