@@ -8,10 +8,10 @@ class RuleResultSet {
 	
 	public Rule rule
 	
-	public Map results = new HashMap()
+	def results = []
 	
-	def addResult(String cause, String info){
-		results.put cause, info
+	def addResult(Result result){
+		results.add result
 	}
 	
 }

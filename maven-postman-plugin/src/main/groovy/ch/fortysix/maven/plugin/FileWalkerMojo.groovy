@@ -1,29 +1,31 @@
 package ch.fortysix.maven.plugin
 
-import java.util.regex.Pattern;
 
 import org.apache.maven.shared.model.fileset.util.FileSetManager 
-import org.apache.maven.shared.model.fileset.FileSet
 import org.codehaus.gmaven.mojo.GroovyMojo;
+
+import groovy.xml.MarkupBuilder
+
 
 /**
  * Mojo traversing and parsing files
  *
- * @goal deliver
+ * @goal collect
  */
 class FileWalkerMojo extends GroovyMojo {
 	
 	/**
-	 * Host name of the SMTP server. The default value is localhost.
-	 * @parameter expression="${postman.mailhost}" default-value="localhost"
+	 * @parameter expression="${project}"
+	 * @required
+	 * @readonly
 	 */
-	String mailhost;
+	org.apache.maven.project.MavenProject project
 	
 	/**
-	 * TCP port of the SMTP server. The default value is 25.
-	 * @parameter expression="${postman.mailport}" default-value="25"
+	 * The xml file to write the report information to. It is used to send mails and create a report page.
+	 * @parameter default-value="${project.build.directory}/postman.xml"
 	 */
-	String mailport;	
+	File reportFile;
 	
 	/**
 	 * A list of <code>fileSet</code> rules to select files and directories.
@@ -33,13 +35,14 @@ class FileWalkerMojo extends GroovyMojo {
 	private List filesets
 	
 	/**
-	 * A list of <code>rule</code> elements defining when and where to send a message
+	 * A list of <code>rule</code> elements defining when and where to send a message.
+	 * You might use the id of developer in the pom or an email directly. 
 	 * <pre>
 	 * <rules>								
 	 * 	<rule>
 	 * 		<regex>.*(author).*</regex>
 	 * 	 	<recivers>	 
-	 * 		  <reciver>dude@xx.com</reciver>
+	 * 		  <reciver>developerId</reciver>
 	 * 		  <reciver>sam@yy.com</reciver>
 	 * 	 	</recivers>
 	 * 	</rule>
@@ -50,71 +53,47 @@ class FileWalkerMojo extends GroovyMojo {
 	 */	
 	private List rules
 	
-	/**
-	 * flag to indicate whether to halt the build on any error. The default value is true.
-	 * @parameter default-value="true"
-	 */
-	boolean failonerror = true;
-	
-	/**
-	 * Email address of sender.
-	 * @parameter expression="${postman.from}" 
-	 * @required
-	 */
-	String from;	
-	
-	
 	private List results = new ArrayList()
 	
-	void execute() {
-		
-		// prepare the messages for the recivers
-		Map recivers2Msg = new HashMap()
-		rules*.recivers*.each{ 
-			recivers2Msg.put( it, new Message()	) 
-		}
-		
-		FileSetManager fileSetManager = new FileSetManager(getLog())
-		rules.each{ rule ->
+	def writeReport2Xml = { rule2resultSet ->
+		def writer = new StringWriter()
+		def xml = new MarkupBuilder(writer)
+		xml.report (date: new Date()){
 			
-			getLog().debug "evaluate rule: $rule"
-			// one message for each rule
-			def resultSet = new RuleResultSet(rule: rule)
-			
-			filesets.each{
-				def allIncludes = convertToFileList(it.getDirectory(), fileSetManager.getIncludedFiles( it ))
-				allIncludes.each{ oneFile ->
-					getLog().debug "get matches in $oneFile"
-					List matches = getMatches(rule.regex, oneFile)
-					if(matches){
-						
-						// we found matches in the file, save the info
-						def info = new StringBuilder()
-						matches.eachWithIndex { txt, i ->
-							def id = i+1
-							getLog().info "Found in file: $txt"
-							info << "$id - $txt\n"
+			rule2resultSet.each { aRule, resultSet ->
+				rule{
+					regex(''){
+						// access writer directly, because of character escaping of CDATA section
+						writer.write "<![CDATA[$aRule.regex]]>"
+					}
+					
+					aRule.recivers.each { aRevicer -> 
+						reciver aRevicer
+					}
+					resultSet.results.each { aResult -> 
+						result(){
+							file(''){
+								// access writer directly, because of character escaping of CDATA section
+								writer.write "<![CDATA[$aResult.file]]>"
+							}
+							aResult.machedGroupLists.each{ groupList ->
+								// concatenate the found groups to a string 
+								def groups = groupList.join(', ')
+								match(''){
+									// access writer directly, because of character escaping of CDATA section
+									writer.write "<![CDATA[$groups]]>"
+								}
+							}
 						}
-						resultSet.addResult oneFile.getCanonicalPath(), info.toString()
-						
 					}
 				}
 			}
 			
-			// add the result to each reciver's (of this rule) message
-			rule.recivers.each{
-				recivers2Msg.get(it)?.resultSets?.add(resultSet)
-			}
 			
 		}
-		
-		//send all the messages to the recivers
-		recivers2Msg.each { key, message ->
-			sendMsg(key, message)
-		}
-		
-		
-	}
+		writer.toString()
+	}	
+	
 	
 	
 	/**
@@ -183,5 +162,44 @@ class FileWalkerMojo extends GroovyMojo {
 		return all
 	}
 	
+	void execute() {
+		
+		def rule2resultSet = [:]
+		
+		FileSetManager fileSetManager = new FileSetManager(getLog())
+		rules.each{ rule ->
+			
+			getLog().debug "evaluate rule: $rule"
+			// one message for each rule
+			def resultSet = new RuleResultSet(rule: rule)
+			
+			filesets.each{
+				def allIncludes = convertToFileList(it.getDirectory(), fileSetManager.getIncludedFiles( it ))
+				allIncludes.each{ oneFile ->
+					getLog().debug "get matches in $oneFile"
+					List matches = getMatches(rule.regex, oneFile)
+					if(matches){
+						
+						// we found matches in the file, save the info
+						def result = new Result(file: oneFile)
+						matches.each{ groups ->
+							result.addMatchGroups(groups)
+						}
+						resultSet.addResult result
+						
+					}
+				}
+			}
+			
+			rule2resultSet.put rule, resultSet
+			
+		}
+		
+		getLog().debug "write reportFile: $reportFile.absolutePath"
+		reportFile.write writeReport2Xml(rule2resultSet), "UTF-8"
+		
+		println writeReport2Xml(rule2resultSet)
+		
+	}
 	
 }
