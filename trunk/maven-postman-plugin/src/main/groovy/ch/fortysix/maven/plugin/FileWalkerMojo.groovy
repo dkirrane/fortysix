@@ -8,18 +8,25 @@ import groovy.xml.MarkupBuilder
 
 
 /**
- * Mojo traversing and parsing files
+ * Collects the information defined in the rules and creates a report file for further processing.
  *
  * @goal collect
  */
 class FileWalkerMojo extends GroovyMojo {
 	
 	/**
-	 * @parameter expression="${project}"
+	 * @parameter expression="${session}"
 	 * @required
 	 * @readonly
 	 */
-	org.apache.maven.project.MavenProject project
+	org.apache.maven.execution.MavenSession session
+	
+	/**
+	 * Encoding of the source
+	 * Advice taken from http://docs.codehaus.org/display/MAVENUSER/POM+Element+for+Source+File+Encoding
+	 * @parameter expression="${encoding}" default-value="${project.build.sourceEncoding}"
+	 */
+	private String sourceEncoding;
 	
 	/**
 	 * The xml file to write the report information to. It is used to send mails and create a report page.
@@ -41,10 +48,10 @@ class FileWalkerMojo extends GroovyMojo {
 	 * <rules>								
 	 * 	<rule>
 	 * 		<regex>.*(author).*</regex>
-	 * 	 	<recivers>	 
-	 * 		  <reciver>developerId</reciver>
-	 * 		  <reciver>sam@yy.com</reciver>
-	 * 	 	</recivers>
+	 * 	 	<receivers>	 
+	 * 		  <receiver>developerId</receiver>
+	 * 		  <receiver>sam@yy.com</receiver>
+	 * 	 	</receivers>
 	 * 	</rule>
 	 * </rules>
 	 * </pre>
@@ -55,6 +62,9 @@ class FileWalkerMojo extends GroovyMojo {
 	
 	private List results = new ArrayList()
 	
+	/**
+	 * writes the results of the collected information to XML
+	 */
 	def writeReport2Xml = { rule2resultSet ->
 		def writer = new StringWriter()
 		def xml = new MarkupBuilder(writer)
@@ -67,8 +77,8 @@ class FileWalkerMojo extends GroovyMojo {
 						writer.write "<![CDATA[$aRule.regex]]>"
 					}
 					
-					aRule.recivers.each { aRevicer -> 
-						reciver aRevicer
+					aRule.receivers.each { aRevicer -> 
+						receiver aRevicer
 					}
 					resultSet.results.each { aResult -> 
 						result(){
@@ -94,43 +104,6 @@ class FileWalkerMojo extends GroovyMojo {
 		writer.toString()
 	}	
 	
-	
-	
-	/**
-	 * sends a message
-	 */
-	def sendMsg = { to, message ->
-		
-		def msgBody = new StringBuilder()
-		message.resultSets*.each{ resultSet ->
-			
-			// add rule teaser
-			msgBody << "Results for rule:" << resultSet.rule?.definition() << "\n"
-			
-			// add results for rule
-			resultSet.results.each{file, text -> 
-				msgBody << "$file:\n$text\n"
-			}
-		}
-		
-		println msgBody
-		
-		List tos = new ArrayList()
-		tos.add to
-		
-		MailSender sender = new MailSender(recivers: tos, 
-		subject: message.subject, 
-		message: msgBody, 
-		mailhost: this.mailhost, 
-		mailport: this.mailport, 
-		failonerror: this.failonerror,
-		from: this.from
-		)
-		
-		sender.sendMail()
-	}
-	
-	
 	/**
 	 * Returns the lines matching the given regex in the file
 	 * @param regex the regex to match
@@ -139,8 +112,8 @@ class FileWalkerMojo extends GroovyMojo {
 	 */
 	List getMatches(String regex, File fileToTest){
 		List result = null
-		def text = fileToTest?.text
-		getLog().debug "search with regex: $regex, fileHasText?"+(text != null)
+		def text = fileToTest?.getText(sourceEncoding)
+		getLog().debug "search with regex: $regex, fileHasText? "+(text != null)
 		if(text != null){
 			def matcher = text =~ regex
 			result = matcher.collect { it }
@@ -162,8 +135,11 @@ class FileWalkerMojo extends GroovyMojo {
 		return all
 	}
 	
+	/**
+	 * execute the MOJO
+	 */
 	void execute() {
-		
+		init()
 		def rule2resultSet = [:]
 		
 		FileSetManager fileSetManager = new FileSetManager(getLog())
@@ -198,8 +174,17 @@ class FileWalkerMojo extends GroovyMojo {
 		getLog().debug "write reportFile: $reportFile.absolutePath"
 		reportFile.write writeReport2Xml(rule2resultSet), "UTF-8"
 		
-		println writeReport2Xml(rule2resultSet)
-		
+	}
+	
+	/**
+	 * Initializes the MOJO.
+	 * If sourceEncoding is not set, we use system 'file.encoding'.
+	 */
+	void init(){
+		if(!sourceEncoding){
+			sourceEncoding = session.getExecutionProperties()."file.encoding"
+			getLog().warn "Using platform sourceEncoding ($sourceEncoding actually) to copy filtered resources, i.e. build is platform dependent!"
+		}
 	}
 	
 }

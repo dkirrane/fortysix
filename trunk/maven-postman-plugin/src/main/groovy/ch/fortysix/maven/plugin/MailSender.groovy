@@ -16,17 +16,23 @@ package ch.fortysix.maven.plugin;
 	String from
 	String cc
 	String message
-	List recivers
+	List receivers
+	String user
+	String password
+	boolean ssl
 	boolean failonerror
 	
 	void sendMail(){
 		
-		ant.mail(mailhost: mailhost, 
+		ant.mail(taskname: "postman", mailhost: mailhost, 
 		mailport: mailport,
 		subject: subject,
+		user: user, 
+		password: password,
+		ssl: ssl,
 		failonerror: failonerror){
 			
-			recivers.each{ to(address:it) }
+			receivers.each{ to(address:it) }
 			
 			from(address:from)
 			cc(address:cc)
