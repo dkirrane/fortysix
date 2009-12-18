@@ -5,11 +5,19 @@ import java.io.File;
 import org.codehaus.gmaven.mojo.GroovyMojo;
 
 /**
- * Mojo enabling the conditional sending of email
+ * Sends the mails/reports collected by the 'collect' goal.
  *
  * @goal send
  */
 class MailMojo extends GroovyMojo {
+	
+	
+	/**
+	 * @parameter expression="${project}"
+	 * @required
+	 * @readonly
+	 */
+	org.apache.maven.project.MavenProject project
 	
 	/**
 	 * The xml file to read the postman report from.
@@ -48,6 +56,24 @@ class MailMojo extends GroovyMojo {
 	 */
 	String mailport;
 	
+	/**
+	 * User name for SMTP auth
+	 * @parameter 
+	 */
+	String mailuser
+	
+	/**
+	 * Password for SMTP auth
+	 * @parameter 
+	 */
+	String mailpassword
+	
+	/**
+	 * Indicates whether you need TLS/SSL
+	 * @parameter  default-value="false"
+	 */
+	boolean mailssl	= false
+	
 	void execute() {
 		
 		def xmlText = reportFile?.text
@@ -59,34 +85,65 @@ class MailMojo extends GroovyMojo {
 			
 			try{
 				
-				def allRecivers = report.rule.reciver*.text().unique()
+				// we collect all receivers mention in the report
+				def allReceivers = report.rule.receiver*.text().unique()
+				def receiver2Rules = [:]
 				
-				allRecivers.each{ aReciver ->
-					println aReciver
-					def rulesForReciver = report.rule.findAll {
-						println it.reciver.text()
-						it.reciver.text().equals aReciver 
+				allReceivers.each{ aReceiver ->
+					def rulesForReceiver = report.rule.findAll {
+						// get all receivers within one rule
+						def receiversForRule = it.receiver*.text()
+						// check if the list contains the current receiver
+						receiversForRule.contains(aReceiver)
 					}
-					
-					rulesForReciver.each{println "send this: "+it}
+					if(getLog().isDebugEnabled()){
+						rulesForReceiver.each{getLog().debug "send this to [$aReceiver]: "+it}
+					}
+					receiver2Rules.put aReceiver, rulesForReceiver 
 				}
 				
-				//			MailSender sender = new MailSender(from: from, 
-				//					subject: subject, 
-				//					message: message, 
-				//					mailhost: mailhost, 
-				//					mailport: mailport, 
-				//					failonerror:failonerror,
-				//					recivers: tos)
-				//			sender.sendMail()
+				receiver2Rules.each sendReport
 				
 			}catch (Exception e) {
-				log.error("failed executing postman plugin", e)
+				log.error("postman failed sening mails", e)
 				if(failonerror){
 					throw e
 				}
 			}
 		}
+	}
+	
+	
+	def sendReport = { receiver, rules ->
+		
+		def address = ""
+		
+		if(!receiver.contains("@")){
+			def email = project.developers?.find {  
+				it.id == receiver
+			}?.email
+			if(email){
+				getLog().info "replace [$receiver] by [$email]"
+				receiver = email
+			}else{
+				getLog().warn "not able to find email for [$receiver]"
+			}
+		}
+		getLog().info "send mail to: $receiver"
+		
+		def message = rules.toString()
+		def tos = [receiver]
+		MailSender sender = new MailSender(from: from, 
+		subject: subject, 
+		message: message, 
+		mailhost: mailhost, 
+		mailport: mailport, 
+		failonerror: failonerror,
+		ssl: mailssl,
+		user: mailuser,
+		password: mailpassword,
+		receivers: tos)
+		sender.sendMail()
 	}
 	
 }
