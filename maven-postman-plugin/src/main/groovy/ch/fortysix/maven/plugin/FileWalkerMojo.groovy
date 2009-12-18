@@ -22,8 +22,8 @@ class FileWalkerMojo extends GroovyMojo {
 	org.apache.maven.execution.MavenSession session
 	
 	/**
-	 * Encoding of the source
-	 * Advice taken from http://docs.codehaus.org/display/MAVENUSER/POM+Element+for+Source+File+Encoding
+	 * Encoding of the source. 
+	 * Advice is taken from: <a href="http://docs.codehaus.org/display/MAVENUSER/POM+Element+for+Source+File+Encoding">POM Element for Source File Encoding</a>
 	 * @parameter expression="${encoding}" default-value="${project.build.sourceEncoding}"
 	 */
 	private String sourceEncoding;
