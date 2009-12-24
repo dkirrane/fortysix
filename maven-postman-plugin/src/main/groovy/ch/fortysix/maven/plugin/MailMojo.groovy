@@ -129,17 +129,27 @@ class MailMojo extends GroovyMojo {
 	
 	void execute() {
 		
-		PostmanReportSender sender = new PostmanReportSender(log: getLog())
-		def receiver2Rules = sender.getMails(reportFile)
-		receiver2Rules.each sendReport
+		if(reportFile){
+			PostmanReportSender sender = new PostmanReportSender(log: getLog())
+			def receiver2Rules = sender.getMails(reportFile)
+			receiver2Rules.each sendReport
+		}
 		
-		TaglistReportSender taglistSender = new TaglistReportSender(log: getLog(), taglistReport: taglistReport)
-		def receiver2Taglist = taglistSender.getMails(taglistReportXml)
-		receiver2Taglist.each sendReport
+		if(taglistReport && !taglistReport.skip){
+			TaglistReportSender taglistSender = new TaglistReportSender(log: getLog(), taglistReport: taglistReport)
+			def receiver2Taglist = taglistSender.getMails(taglistReportXml)
+			receiver2Taglist.each sendReport
+		}else{
+			getLog().warn "postman is skipping 'Taglist report'"
+		}
 		
-		SurefireReportSender testReportSender = new SurefireReportSender(log: getLog(), surefireReport: surefireReport)
-		def receiver2TestReport = testReportSender.getMails(testReportsDirectory)
-		receiver2TestReport.each sendReport
+		if(surefireReport && !surefireReport.skip){
+			SurefireReportSender testReportSender = new SurefireReportSender(log: getLog(), surefireReport: surefireReport)
+			def receiver2TestReport = testReportSender.getMails(testReportsDirectory)
+			receiver2TestReport.each sendReport
+		}else{
+			getLog().warn "postman is skipping 'Surefire report'"
+		}
 		
 	}
 	

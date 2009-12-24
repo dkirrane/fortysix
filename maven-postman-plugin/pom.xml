@@ -4,7 +4,7 @@
 	<artifactId>maven-postman-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
 	<name>Postman mail plugin</name>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>0.0.5-SNAPSHOT</version>
 	<inceptionYear>2009</inceptionYear>
 	<description>Enables conditional sending of mails in a build. The purpose of the plugin is to support conditional emailing (e.g. send an email if a file contains a certain string or there like)</description>
 	<url>http://doc.fortysix.ch/maven/maven-postman-plugin</url>
@@ -17,7 +17,7 @@
 		</license>
 	</licenses>
 	<properties>
-		<version.GMaven>1.1</version.GMaven>
+		<version.GMaven>1.2</version.GMaven>
 		<project.build.sourceEncoding>Cp1252</project.build.sourceEncoding>
 	</properties>
 	<scm>
@@ -124,12 +124,23 @@
 	</dependencies>
 	<build>
 		<plugins>
-			<!--
-				<plugin> <groupId>org.codehaus.gmaven</groupId> <artifactId>gmaven-plugin</artifactId> <version>1.1</version> <extensions>true</extensions>
-				<executions> <execution> <goals> <goal>generateStubs</goal> <goal>compile</goal> <goal>generateTestStubs</goal> <goal>testCompile</goal> </goals>
-				</execution> </executions> </plugin>
-			-->
 			<plugin>
+				<groupId>org.codehaus.gmaven</groupId>
+				<artifactId>gmaven-plugin</artifactId>
+				<version>1.2</version>
+				<extensions>true</extensions>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generateStubs</goal>
+							<goal>compile</goal>
+							<goal>generateTestStubs</goal>
+							<goal>testCompile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!--<plugin>
 				<groupId>org.codehaus.mojo.groovy</groupId>
 				<artifactId>groovy-maven-plugin</artifactId>
 				<version>1.0-beta-3</version>
@@ -144,7 +155,7 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin>-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-plugin-plugin</artifactId>

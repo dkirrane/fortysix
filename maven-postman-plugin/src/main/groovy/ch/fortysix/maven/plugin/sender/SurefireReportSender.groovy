@@ -22,6 +22,9 @@ class SurefireReportSender {
 		def receiver2Mail = [:]
 		
 		if(reportDir != null){
+			
+			log.info("prepare surefire mails...")
+			
 			def mailContent = new TestReportMailContent() 
 			reportDir.eachFileMatch( ~surefireReport.reportFilePattern ) { reportFile -> 
 				log.debug "-->$reportFile" 
