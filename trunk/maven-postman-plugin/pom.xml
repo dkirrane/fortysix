@@ -4,7 +4,7 @@
 	<artifactId>maven-postman-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
 	<name>Postman mail plugin</name>
-	<version>0.0.5-SNAPSHOT</version>
+	<version>0.0.6-SNAPSHOT</version>
 	<inceptionYear>2009</inceptionYear>
 	<description>Enables conditional sending of mails in a build. The purpose of the plugin is to support conditional emailing (e.g. send an email if a file contains a certain string or there like)</description>
 	<url>http://doc.fortysix.ch/maven/maven-postman-plugin</url>
@@ -19,6 +19,7 @@
 	<properties>
 		<version.GMaven>1.2</version.GMaven>
 		<project.build.sourceEncoding>Cp1252</project.build.sourceEncoding>
+		<doxiaVersion>1.0</doxiaVersion>
 	</properties>
 	<scm>
 		<connection>scm:svn:https://fortysix.googlecode.com/svn/trunk/maven-postman-plugin</connection>
@@ -120,6 +121,26 @@
 			<artifactId>file-management</artifactId>
 			<version>1.2.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.maven.reporting</groupId>
+			<artifactId>maven-reporting-api</artifactId>
+			<version>2.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.maven.reporting</groupId>
+			<artifactId>maven-reporting-impl</artifactId>
+			<version>2.0.4.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.maven.doxia</groupId>
+			<artifactId>doxia-sink-api</artifactId>
+			<version>${doxiaVersion}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.plexus</groupId>
+			<artifactId>plexus-utils</artifactId>
+			<version>1.5.8</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -139,22 +160,11 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!--<plugin>
-				<groupId>org.codehaus.mojo.groovy</groupId>
-				<artifactId>groovy-maven-plugin</artifactId>
-				<version>1.0-beta-3</version>
-				<extensions>true</extensions>
-				<executions>
-					<execution>
-						<goals>
-							<goal>generateStubs</goal>
-							<goal>compile</goal>
-							<goal>generateTestStubs</goal>
-							<goal>testCompile</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>-->
+			<!--
+				<plugin> <groupId>org.codehaus.mojo.groovy</groupId> <artifactId>groovy-maven-plugin</artifactId> <version>1.0-beta-3</version>
+				<extensions>true</extensions> <executions> <execution> <goals> <goal>generateStubs</goal> <goal>compile</goal> <goal>generateTestStubs</goal>
+				<goal>testCompile</goal> </goals> </execution> </executions> </plugin>
+			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-plugin-plugin</artifactId>
@@ -173,7 +183,7 @@
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
 				<artifactId>wagon-ftp</artifactId>
-				<version>1.0-beta-5</version>
+				<version>1.0-beta-6</version>
 			</extension>
 		</extensions>
 	</build>
