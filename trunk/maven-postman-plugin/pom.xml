@@ -47,7 +47,6 @@
 			<url>http://oss.sonatype.org/content/groups/fortysix-with-staging</url>
 		</repository>
 		<snapshotRepository>
-			<uniqueVersion>false</uniqueVersion>
 			<id>fortysix-snapshots</id>
 			<name>Snapshot Repository</name>
 			<url>http://oss.sonatype.org/content/repositories/fortysix-snapshots</url>
@@ -179,36 +178,8 @@
 		</extensions>
 	</build>
 	<repositories>
-		<repository>
-			<id>codehaus.org snapshot</id>
-			<url>http://snapshots.repository.codehaus.org</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</repository>
-		<repository>
-			<id>codehaus.org</id>
-			<url>http://repository.codehaus.org/</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
 	</repositories>
 	<pluginRepositories>
-		<pluginRepository>
-			<id>codehaus.org snapshot</id>
-			<url>http://snapshots.repository.codehaus.org</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</pluginRepository>
-		<pluginRepository>
-			<id>codehaus.org</id>
-			<url>http://repository.codehaus.org/</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
 	</pluginRepositories>
 	<reporting>
 		<plugins>
