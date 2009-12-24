@@ -15,18 +15,36 @@ class TaglistReportSender {
 	TaglistReport taglistReport;
 	
 	Map getMails(File reportFile){
-		def xmlText = reportFile?.text
+		
+		log.info("prepare taglist mails...")
+		
+		def xmlText 
+		if(reportFile && reportFile.exists()){
+			xmlText = reportFile?.text	
+		}else{
+			log.warn "could not load taglist report, file does not exist ($reportFile)"
+		}
+		
 		def receiver2Mail = [:]
 		
-		if(xmlText != null){
-			log.info("prepare taglist mails...")
-			def report = new XmlSlurper().parseText(xmlText)
+		if(xmlText){
+			
+			def report
+			try{ 
+				report = new XmlSlurper().parseText(xmlText)
+			}catch (Exception e){
+				log.warn "could not load taglist report, seems not to be a valid report file! ($reportFile)"
+				return receiver2Mail
+			}
 			
 			// uniquely get all receivers (in a Set)
-			def allReceivers = taglistReport?.tagClasses?.receivers.flatten{} as Set
+			def allReceivers = taglistReport?.tagClasses?.receivers.flatten{
+			} as Set
 			def receiver2DisplayNames = [:]
 			allReceivers.each{ aReceiver -> 
-				def displayNames = taglistReport?.tagClasses?.findAll{ tagClass -> tagClass.receivers.contains(aReceiver) }.displayName
+				def displayNames = taglistReport?.tagClasses?.findAll{ tagClass ->
+					tagClass.receivers.contains(aReceiver)
+				}.displayName
 				log.debug "prepare taglist-mail for $aReceiver with displayNames: $displayNames"
 				receiver2DisplayNames.put(aReceiver, displayNames)
 			}

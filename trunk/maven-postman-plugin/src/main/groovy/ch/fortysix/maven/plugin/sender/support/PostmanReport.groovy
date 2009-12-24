@@ -2,7 +2,7 @@ package ch.fortysix.maven.plugin.sender.support;
 
 import java.io.File;
 
-class TaglistReport {
+class PostmanReport {
 	
 	boolean skip
 	
