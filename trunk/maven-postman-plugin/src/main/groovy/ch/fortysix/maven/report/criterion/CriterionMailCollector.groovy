@@ -6,13 +6,12 @@ package ch.fortysix.maven.report.criterion
 
 import org.apache.maven.plugin.logging.Log;
 
-import ch.fortysix.maven.plugin.sender.support.PostmanReportMailContent;
 
 /**
  * @author Domi
  *
  */
-class PostmanReportSender {
+class CriterionMailCollector {
 	
 	Log log;
 	

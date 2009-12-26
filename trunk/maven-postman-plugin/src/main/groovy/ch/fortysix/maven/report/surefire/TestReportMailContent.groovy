@@ -1,7 +1,8 @@
 /**
  * 
  */
-package ch.fortysix.maven.plugin.sender.support;
+package ch.fortysix.maven.report.surefire
+;
 
 /**
  * @author Domi

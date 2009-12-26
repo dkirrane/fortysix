@@ -18,7 +18,7 @@ import org.apache.maven.reporting.MavenReportException;
 import org.apache.maven.shared.model.fileset.util.FileSetManager;
 
 import ch.fortysix.maven.report.AbstractReportMojo;
-import ch.fortysix.maven.report.HtmlReporter;
+import ch.fortysix.maven.report.support.HtmlReporter;
 import ch.fortysix.maven.report.taglist.TaglistReportBodyGenerator;
 
 /**
@@ -78,7 +78,7 @@ class PostmanCriterionReportMojortMojo extends AbstractReportMojo {
 		def receiver2Mail = [:]
 		
 		if(reportFile && reportFile.isFile()){
-			PostmanReportSender sender = new PostmanReportSender(log: getLog())
+			CriterionMailCollector sender = new CriterionMailCollector(log: getLog())
 			receiver2Mail = sender.getMails(reportFile)
 			receiver2Mail.each sendReport
 		}else{

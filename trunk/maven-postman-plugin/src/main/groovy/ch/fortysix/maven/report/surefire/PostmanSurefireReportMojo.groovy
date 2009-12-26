@@ -1,7 +1,8 @@
+package ch.fortysix.maven.report.surefire
+
 /**
  * 
  */
-package ch.fortysix.maven.report;
 
 import java.io.File;
 import java.util.Locale;
@@ -12,8 +13,9 @@ import org.apache.maven.doxia.siterenderer.Renderer;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.MavenReportException;
 
-import ch.fortysix.maven.report.surefire.SurefireReportBodyGenerator;
-import ch.fortysix.maven.report.surefire.SurefireReportSender;
+import ch.fortysix.maven.report.AbstractReportMojo;
+import ch.fortysix.maven.report.support.HtmlReporter;
+
 
 /**
  * @author Domi
@@ -80,7 +82,7 @@ class PostmanSurefireReportMojoo extends AbstractReportMojo {
 	
 	protected void executeReport(Locale locale) throws MavenReportException {
 		
-		SurefireReportSender testReportSender = new SurefireReportSender(log: getLog(), reportFilePattern: reportFilePattern)
+		SurefireMailCollector testReportSender = new SurefireMailCollector(log: getLog(), reportFilePattern: reportFilePattern)
 		def mailContent = testReportSender.getSingleMail(testReportsDirectory)
 		
 		def receiver2Mail = [:]	

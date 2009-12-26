@@ -1,7 +1,8 @@
+package ch.fortysix.maven.report.taglist
+
 /**
  * 
  */
-package ch.fortysix.maven.report;
 
 import java.io.File;
 import java.util.List;
@@ -13,9 +14,9 @@ import org.apache.maven.doxia.siterenderer.Renderer;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.MavenReportException;
 
+import ch.fortysix.maven.report.AbstractReportMojo;
+import ch.fortysix.maven.report.support.HtmlReporter;
 import ch.fortysix.maven.report.surefire.SurefireReportBodyGenerator;
-import ch.fortysix.maven.report.taglist.TaglistReportBodyGenerator;
-import ch.fortysix.maven.report.taglist.TaglistReportSender;
 
 /**
  * @author Domi
@@ -76,7 +77,7 @@ class PostmanTaglistReportMojo extends AbstractReportMojo {
 	
 	protected void executeReport(Locale locale) throws MavenReportException {
 		
-		TaglistReportSender taglistSender = new TaglistReportSender(log: getLog(), tagClasses: tagClasses)
+		TaglistMailCollector taglistSender = new TaglistMailCollector(log: getLog(), tagClasses: tagClasses)
 		def receiver2Mail = taglistSender.getMails(taglistReportXml)
 		
 		if(!skipMails){

@@ -1,4 +1,5 @@
-package ch.fortysix.maven.plugin.sender.support;
+package ch.fortysix.maven.report.taglist
+;
 
 import java.util.Iterator;
 
@@ -8,7 +9,7 @@ class TagClassMailContent {
 	def tagsFromReportFile = []
 	
 	/**
-	 * Formats the content and build the body 
+	 * Formats the content and builds the body 
 	 */
 	String asMailBody(){
 		def body = new StringBuilder()
