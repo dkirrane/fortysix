@@ -1,7 +1,8 @@
 /**
  * 
  */
-package ch.fortysix.maven.report
+package ch.fortysix.maven.report.taglist
+
 ;
 
 import java.util.Set;

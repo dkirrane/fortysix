@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ch.fortysix.maven.report;
+package ch.fortysix.maven.report.support
 
 import java.util.List;
 import java.util.ResourceBundle;

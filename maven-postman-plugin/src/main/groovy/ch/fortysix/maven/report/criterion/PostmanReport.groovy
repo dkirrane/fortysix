@@ -1,10 +1,12 @@
-package ch.fortysix.maven.plugin.sender.support;
+package ch.fortysix.maven.report.criterion
+;
 
 import java.io.File;
 
-import ch.fortysix.maven.report.TagClass;
+import ch.fortysix.maven.report.taglist.TagClass;
 
-class TaglistReport {
+
+class PostmanReport {
 	
 	boolean skip
 	

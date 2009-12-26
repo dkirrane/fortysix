@@ -6,12 +6,7 @@ import java.util.Map;
 
 import org.apache.maven.plugin.logging.Log;
 
-import ch.fortysix.maven.plugin.sender.support.TagClassMailContent;
-import ch.fortysix.maven.plugin.sender.support.TaglistReport;
-import ch.fortysix.maven.plugin.sender.support.TestReportMailContent;
-import ch.fortysix.maven.plugin.sender.support.TestSuiteReport;
-
-class SurefireReportSender {
+class SurefireMailCollector {
 	
 	String reportFilePattern
 	
