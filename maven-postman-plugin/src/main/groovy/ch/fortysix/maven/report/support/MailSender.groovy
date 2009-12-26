@@ -1,12 +1,13 @@
 /**
  * 
  */
-package ch.fortysix.maven.plugin;
+package ch.fortysix.maven.report.support
+;
 
 /**
  * @author Domi
  *
- */public class MailSender {
+ */class MailSender {
 	
 	private AntBuilder ant = new AntBuilder()
 	

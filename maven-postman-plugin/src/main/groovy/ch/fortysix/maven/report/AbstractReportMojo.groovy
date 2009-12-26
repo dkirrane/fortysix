@@ -12,7 +12,7 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.AbstractMavenReport;
 import org.apache.maven.reporting.MavenReportException;
 
-import ch.fortysix.maven.plugin.MailSender;
+import ch.fortysix.maven.report.support.MailSender;
 
 /**
  * @author Domi
@@ -171,7 +171,7 @@ abstract class AbstractReportMojo extends AbstractMavenReport {
 		}
 		
 		def tos = [receiver]
-		MailSender sender = new MailSender(from: from, 
+		def sender = new MailSender(from: from, 
 		subject: subject, 
 		message: message, 
 		mailhost: mailhost, 
