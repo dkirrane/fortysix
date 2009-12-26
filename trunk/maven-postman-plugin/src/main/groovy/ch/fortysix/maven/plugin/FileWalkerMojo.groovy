@@ -45,15 +45,15 @@ class FileWalkerMojo extends GroovyMojo {
 	 * A list of <code>rule</code> elements defining when and where to send a message.
 	 * You might use the id of developer in the pom or an email directly. 
 	 * <pre>
-	 * <rules>								
-	 * 	<rule>
-	 * 		<regex>.*(author).*</regex>
-	 * 	 	<receivers>	 
-	 * 		  <receiver>developerId</receiver>
-	 * 		  <receiver>sam@yy.com</receiver>
-	 * 	 	</receivers>
-	 * 	</rule>
-	 * </rules>
+	 * &lt;rules&gt;								
+	 * 	&lt;rule&gt;
+	 * 		&lt;regex&gt;.*(author).*&lt;/regex&gt;
+	 * 	 	&lt;receivers&gt;	 
+	 * 		  &lt;receiver&gt;developerId&lt;/receiver&gt;
+	 * 		  &lt;receiver&gt;sam@yy.com&lt;/receiver&gt;
+	 * 	 	&lt;/receivers&gt;
+	 * 	&lt;/rule&gt;
+	 * &lt;/rules&gt;
 	 * </pre>
 	 * @parameter
 	 * @required

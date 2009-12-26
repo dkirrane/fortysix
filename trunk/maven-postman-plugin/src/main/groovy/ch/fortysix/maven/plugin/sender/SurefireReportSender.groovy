@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.apache.maven.plugin.logging.Log;
 
-import ch.fortysix.maven.plugin.sender.support.SurefireReport;
 import ch.fortysix.maven.plugin.sender.support.TagClassMailContent;
 import ch.fortysix.maven.plugin.sender.support.TaglistReport;
 import ch.fortysix.maven.plugin.sender.support.TestReportMailContent;
@@ -13,20 +12,19 @@ import ch.fortysix.maven.plugin.sender.support.TestSuiteReport;
 
 class SurefireReportSender {
 	
+	String reportFilePattern
+	
 	Log log;
 	
-	SurefireReport surefireReport
-	
-	Map getMails(File reportDir){
+	TestReportMailContent getSingleMail(File reportDir){
 		
-		def receiver2Mail = [:]
-		
+		def mailContent
 		if(reportDir != null){
 			
-			log.info("prepare surefire mails...")
+			log.info("prepare surefire mail...")
 			
-			def mailContent = new TestReportMailContent() 
-			reportDir.eachFileMatch( ~surefireReport.reportFilePattern ) { reportFile -> 
+			mailContent = new TestReportMailContent() 
+			reportDir.eachFileMatch( ~reportFilePattern ) { reportFile -> 
 				log.debug "-->$reportFile" 
 				def xmlText = reportFile?.text
 				def testsuite = new XmlSlurper().parseText(xmlText)
@@ -39,15 +37,11 @@ class SurefireReportSender {
 						)
 				mailContent.suiteReports << suiteReport
 			}
-			// if we found a report, we send it to all receivers
-			if(mailContent.suiteReports){
-				surefireReport.receivers.each{ aReceiver -> 
-					receiver2Mail.put(aReceiver, mailContent)
-				}
-			}
+			
+			return mailContent
+			
 		}
 		
-		return receiver2Mail
 	}
 	
 }

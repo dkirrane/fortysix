@@ -12,32 +12,51 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.AbstractMavenReport;
 import org.apache.maven.reporting.MavenReportException;
 
+import ch.fortysix.maven.plugin.sender.PostmanReportSender;
+import ch.fortysix.maven.report.taglist.TaglistReportBodyGenerator;
+
 /**
  * @author Domi
- * @goal postman-report
+ * @goal postman-regex-report
  * @phase site
  */
 class PostmanReportMojo extends AbstractReportMojo {
 	
-	protected void executeReport(Locale locale) throws MavenReportException {
-		def report = new HtmlReporter()
-		report.doGenerateEmptyReport( getBundle( locale ), getSink(), "postaman" )
-	}
+	/**
+	 * The xml file to read the postman report from.
+	 * @parameter default-value="${project.build.directory}/postman.xml"
+	 */
+	File reportFile;
 	
-	public String getDescription(Locale locale) {
-		getBundle( locale ).getString( "report.postman.description" )
-	}
-	
-	public String getName(Locale locale) {
-		return getBundle( locale ).getString( "report.postman.name" )
+	String getNlsPrefix(){
+		"report.postman."
 	}
 	
 	public String getOutputName() {
 		"postman-report"
-	}
+	}	
 	
-	private ResourceBundle getBundle( Locale locale ) {
-		return ResourceBundle.getBundle( "postaman-report", locale, this.getClass().getClassLoader() )
+	protected void executeReport(Locale locale) throws MavenReportException {
+		
+		def receiver2Mail = [:]
+		
+		if(reportFile && reportFile.isFile()){
+			PostmanReportSender sender = new PostmanReportSender(log: getLog())
+			receiver2Mail = sender.getMails(reportFile)
+			receiver2Mail.each sendReport
+		}else{
+			getLog().warn "ReportFile is not readable ($reportFile)!"
+			skipMails = true
+		}
+		
+		if(!skipMails){
+			receiver2Mail.each sendReport
+		} else{
+			log.info "postman skips sending mails!"
+		}
+		
+		def report = new HtmlReporter(bodyGenerator: new TaglistReportBodyGenerator(receiver2TestReport: receiver2Mail))
+		report.doGenerateReport( getBundle( locale ), getSink(), nlsPrefix, getLog() )
 	}
 	
 }

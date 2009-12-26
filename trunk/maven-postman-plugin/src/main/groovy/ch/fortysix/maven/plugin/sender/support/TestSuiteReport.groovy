@@ -13,4 +13,6 @@ class TestSuiteReport {
 	Integer tests
 	Integer failures
 	String name
+	
+	
 }
