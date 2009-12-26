@@ -1,4 +1,5 @@
-package ch.fortysix.maven.plugin.sender;
+package ch.fortysix.maven.report.surefire
+;
 
 import java.io.File;
 import java.util.Map;

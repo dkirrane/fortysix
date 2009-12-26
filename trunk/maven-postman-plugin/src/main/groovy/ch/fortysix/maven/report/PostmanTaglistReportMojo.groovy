@@ -13,10 +13,9 @@ import org.apache.maven.doxia.siterenderer.Renderer;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.MavenReportException;
 
-import ch.fortysix.maven.plugin.sender.SurefireReportSender;
-import ch.fortysix.maven.plugin.sender.TaglistReportSender;
 import ch.fortysix.maven.report.surefire.SurefireReportBodyGenerator;
 import ch.fortysix.maven.report.taglist.TaglistReportBodyGenerator;
+import ch.fortysix.maven.report.taglist.TaglistReportSender;
 
 /**
  * @author Domi
