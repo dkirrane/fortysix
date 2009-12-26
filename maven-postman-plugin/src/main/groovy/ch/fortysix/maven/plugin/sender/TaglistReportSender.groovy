@@ -1,6 +1,7 @@
 package ch.fortysix.maven.plugin.sender;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.maven.plugin.logging.Log;
@@ -12,7 +13,7 @@ class TaglistReportSender {
 	
 	Log log;
 	
-	TaglistReport taglistReport;
+	List tagClasses
 	
 	Map getMails(File reportFile){
 		
@@ -38,11 +39,11 @@ class TaglistReportSender {
 			}
 			
 			// uniquely get all receivers (in a Set)
-			def allReceivers = taglistReport?.tagClasses?.receivers.flatten{
+			def allReceivers = tagClasses?.receivers.flatten{
 			} as Set
 			def receiver2DisplayNames = [:]
 			allReceivers.each{ aReceiver -> 
-				def displayNames = taglistReport?.tagClasses?.findAll{ tagClass ->
+				def displayNames = tagClasses?.findAll{ tagClass ->
 					tagClass.receivers.contains(aReceiver)
 				}.displayName
 				log.debug "prepare taglist-mail for $aReceiver with displayNames: $displayNames"
