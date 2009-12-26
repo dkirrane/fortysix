@@ -1,7 +1,8 @@
 /**
  * 
  */
-package ch.fortysix.maven.plugin;
+package ch.fortysix.maven.report.criterion
+;
 
 /**
  * Represents a result/match found in one file

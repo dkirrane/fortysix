@@ -12,8 +12,8 @@ import org.apache.maven.doxia.siterenderer.Renderer;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.MavenReportException;
 
-import ch.fortysix.maven.plugin.sender.SurefireReportSender;
 import ch.fortysix.maven.report.surefire.SurefireReportBodyGenerator;
+import ch.fortysix.maven.report.surefire.SurefireReportSender;
 
 /**
  * @author Domi
@@ -25,6 +25,10 @@ class PostmanSurefireReportMojoo extends AbstractReportMojo {
 	String getNlsPrefix(){
 		"report.postman.surefire."
 	}
+	
+	public String getOutputName() {
+		"postman-surefire-report"
+	}	
 	
 	/**
 	 * Who should receive a mail? One can use an id of a developer registered in the pom or an email address directly.
@@ -126,9 +130,5 @@ class PostmanSurefireReportMojoo extends AbstractReportMojo {
 		def report = new HtmlReporter(bodyGenerator: new SurefireReportBodyGenerator(receiver2TestReport: receiver2Mail))
 		report.doGenerateReport( getBundle( locale ), getSink(), nlsPrefix, getLog() )
 	}
-	
-	public String getOutputName() {
-		"postman-surefire-report"
-	}	
 	
 }

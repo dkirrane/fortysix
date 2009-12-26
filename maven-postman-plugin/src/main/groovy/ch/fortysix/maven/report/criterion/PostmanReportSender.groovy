@@ -1,7 +1,8 @@
 /**
  * 
  */
-package ch.fortysix.maven.plugin.sender;
+package ch.fortysix.maven.report.criterion
+;
 
 import org.apache.maven.plugin.logging.Log;
 

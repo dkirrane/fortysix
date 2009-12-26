@@ -21,6 +21,20 @@ import ch.fortysix.maven.plugin.MailSender;
 abstract class AbstractReportMojo extends AbstractMavenReport {
 	
 	/**
+	 * @parameter expression="${session}"
+	 * @required
+	 * @readonly
+	 */
+	org.apache.maven.execution.MavenSession session
+	
+	/**
+	 * Encoding of the source. 
+	 * Advice is taken from: <a href="http://docs.codehaus.org/display/MAVENUSER/POM+Element+for+Source+File+Encoding">POM Element for Source File Encoding</a>
+	 * @parameter expression="${encoding}" default-value="${project.build.sourceEncoding}"
+	 */
+	String sourceEncoding;	
+	
+	/**
 	 * Indicates whether this report should skip the sending mails (no mails send).
 	 * @parameter  default-value="false"
 	 */
@@ -83,7 +97,7 @@ abstract class AbstractReportMojo extends AbstractMavenReport {
 	 * 
 	 * @parameter default-value="${project.reporting.outputDirectory}"
 	 */
-	private File outputDirectory;	
+	File outputDirectory;	
 	
 	/**
 	 * flag to indicate whether to halt the build on any error. The default value is true.
@@ -169,5 +183,17 @@ abstract class AbstractReportMojo extends AbstractMavenReport {
 		receivers: tos)
 		sender.sendMail()
 	}	
+	
+	
+	/**
+	 * Initializes the MOJO.
+	 * If sourceEncoding is not set, we use system 'file.encoding'.
+	 */
+	void init(){
+		if(!sourceEncoding){
+			sourceEncoding = session.getExecutionProperties()."file.encoding"
+			getLog().warn "Using platform sourceEncoding ($sourceEncoding actually) to copy filtered resources, i.e. build is platform dependent!"
+		}
+	}
 	
 }

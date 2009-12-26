@@ -1,4 +1,6 @@
-package ch.fortysix.maven.plugin;
+package ch.fortysix.maven.report.criterion
+;
+
 
 /**
  * @author Domi
