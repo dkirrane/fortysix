@@ -80,7 +80,6 @@ class PostmanCriterionReportMojortMojo extends AbstractReportMojo {
 		if(reportFile && reportFile.isFile()){
 			CriterionMailCollector sender = new CriterionMailCollector(log: getLog())
 			receiver2Mail = sender.getMails(reportFile)
-			receiver2Mail.each sendReport
 		}else{
 			getLog().warn "ReportFile is not readable ($reportFile)!"
 			skipMails = true

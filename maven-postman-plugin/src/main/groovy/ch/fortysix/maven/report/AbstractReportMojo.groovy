@@ -165,11 +165,6 @@ abstract class AbstractReportMojo extends AbstractMavenReport {
 		
 		def message = mailContent.asMailBody()
 		
-		println message
-		if(getLog().isDebugEnabled()){
-			
-		}
-		
 		def tos = [receiver]
 		def sender = new MailSender(from: from, 
 		subject: subject, 
