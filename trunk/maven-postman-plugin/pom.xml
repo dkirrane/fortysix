@@ -141,6 +141,11 @@
 			<artifactId>plexus-utils</artifactId>
 			<version>1.5.8</version>
 		</dependency>
+		<dependency>
+			<groupId>nekohtml</groupId>
+			<artifactId>nekohtml</artifactId>
+			<version>1.9.6.2</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
