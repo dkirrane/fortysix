@@ -18,7 +18,7 @@ import org.apache.maven.reporting.MavenReportException;
 import org.apache.maven.shared.model.fileset.util.FileSetManager;
 
 import ch.fortysix.maven.report.AbstractReportMojo;
-import ch.fortysix.maven.report.support.HtmlReporter;
+import ch.fortysix.maven.report.support.SinkReporter;
 import ch.fortysix.maven.report.taglist.TaglistReportBodyGenerator;
 
 /**
@@ -99,7 +99,7 @@ class PostmanCriterionReportMojortMojo extends AbstractReportMojo {
 			log.info "postman skips sending mails!"
 		}
 		
-		def report = new HtmlReporter(bodyGenerator: new CriterionReportBodyGeneratorerator(receiver2TestReport: receiver2Mail))
+		def report = new SinkReporter(bodyGenerator: new CriterionReportBodyGeneratorerator(receiver2TestReport: receiver2Mail))
 		report.doGenerateReport( getBundle( locale ), getSink(), nlsPrefix, getLog() )
 	}
 	

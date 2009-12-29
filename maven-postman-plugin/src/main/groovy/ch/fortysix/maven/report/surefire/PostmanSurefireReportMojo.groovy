@@ -14,7 +14,7 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.MavenReportException;
 
 import ch.fortysix.maven.report.AbstractReportMojo;
-import ch.fortysix.maven.report.support.HtmlReporter;
+import ch.fortysix.maven.report.support.SinkReporter;
 
 
 /**
@@ -139,7 +139,7 @@ class PostmanSurefireReportMojoo extends AbstractReportMojo {
 		}
 		
 		
-		def report = new HtmlReporter(bodyGenerator: new SurefireReportBodyGenerator(receiver2TestReport: receiver2Mail))
+		def report = new SinkReporter(bodyGenerator: new SurefireReportBodyGenerator(receiver2TestReport: receiver2Mail))
 		report.doGenerateReport( getBundle( locale ), getSink(), nlsPrefix, getLog() )
 	}
 	

@@ -14,7 +14,7 @@ import org.apache.maven.plugin.logging.Log;
  * @author Domi
  *
  */
-class HtmlReporter {
+class SinkReporter {
 	
 	def bodyGenerator;
 	
