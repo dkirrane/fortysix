@@ -4,7 +4,11 @@
 package ch.fortysix.maven.report.criterion
 ;
 
+import java.io.File;
+
 import org.apache.maven.plugin.logging.Log;
+
+import ch.fortysix.maven.report.support.HtmlExtractor;
 
 
 /**
@@ -23,7 +27,7 @@ class CriterionMailCollector {
 		if(xmlText != null){
 			def report = new XmlSlurper().parseText(xmlText)
 			
-			log.info("prepare postman mails...")
+			log.info("postman: prepare postman mails...")
 			
 			try{
 				

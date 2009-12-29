@@ -10,6 +10,8 @@ import com.sun.mail.imap.protocol.BODY;
 class TagClassMailContent {
 	def tagsFromReportFile = []
 	
+	def html
+	
 	/**
 	 * Formats the content and builds the body 
 	 */

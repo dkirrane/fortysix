@@ -17,7 +17,7 @@ class SurefireMailCollector {
 		def mailContent
 		if(reportDir != null){
 			
-			log.info("prepare surefire mail...")
+			log.info("postman: prepare surefire mail...")
 			
 			mailContent = new TestReportMailContent() 
 			reportDir.eachFileMatch( ~reportFilePattern ) { reportFile -> 

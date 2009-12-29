@@ -7,21 +7,25 @@ import java.util.Map;
 
 import org.apache.maven.plugin.logging.Log;
 
+import ch.fortysix.maven.report.support.HtmlExtractor
+
 class TaglistMailCollector {
 	
 	Log log;
 	
 	List tagClasses
 	
-	Map getMails(File reportFile){
+	HtmlExtractor htmlExtractor = new HtmlExtractor()
+	
+	Map getMails(File taglistReportXML, File taglistReportHtml){
 		
-		log.info("prepare taglist mails...")
+		log.info("postman: prepare taglist mails...")
 		
 		def xmlText 
-		if(reportFile && reportFile.exists()){
-			xmlText = reportFile?.text	
+		if(taglistReportXML && taglistReportXML.exists()){
+			xmlText = taglistReportXML?.text	
 		}else{
-			log.warn "could not load taglist report, file does not exist ($reportFile)"
+			log.warn "could not load taglist report, file does not exist ($taglistReportXML)"
 		}
 		
 		def receiver2Mail = [:]
@@ -32,7 +36,7 @@ class TaglistMailCollector {
 			try{ 
 				report = new XmlSlurper().parseText(xmlText)
 			}catch (Exception e){
-				log.warn "could not load taglist report, seems not to be a valid report file! ($reportFile)"
+				log.warn "could not load taglist report, seems not to be a valid report file! ($taglistReportXML)"
 				return receiver2Mail
 			}
 			
@@ -63,8 +67,12 @@ class TaglistMailCollector {
 					def s = tags4Receiver.size()
 					log.debug "found $s tags for '$aReceiver'"
 				}
+				
+				// get the html of the generated taglist report (taglist-plugin)
+				def html = htmlExtractor.extractHTMLTagById(htmlFile: taglistReportHtml, tagName: "div", tagId: "bodyColumn")
+				
 				// assign a mailcontent for each receiver
-				def mailContent = new TagClassMailContent(tagsFromReportFile: tags4Receiver) 
+				def mailContent = new TagClassMailContent(tagsFromReportFile: tags4Receiver, html: html) 
 				receiver2Mail.put(aReceiver, mailContent)
 			}
 		}

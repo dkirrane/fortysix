@@ -24,6 +24,16 @@ import ch.fortysix.maven.report.support.HtmlReporter;
  */
 class PostmanSurefireReportMojoo extends AbstractReportMojo {
 	
+	/**
+	 * The postfix used in the email subject 
+	 * @parameter default-value="surfire tests reminder"
+	 */
+	String subjectPostFix
+	
+	String getSubjectPostFix(){
+		return subjectPostFix
+	}
+	
 	String getNlsPrefix(){
 		"report.postman.surefire."
 	}
@@ -80,7 +90,7 @@ class PostmanSurefireReportMojoo extends AbstractReportMojo {
 	 */	
 	File testReportsDirectory	
 	
-	protected void executeReport(Locale locale) throws MavenReportException {
+	protected void executePostmanReport(Locale locale) throws MavenReportException {
 		
 		SurefireMailCollector testReportSender = new SurefireMailCollector(log: getLog(), reportFilePattern: reportFilePattern)
 		def mailContent = testReportSender.getSingleMail(testReportsDirectory)

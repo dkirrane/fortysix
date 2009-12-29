@@ -12,6 +12,8 @@ class TestReportMailContent {
 	
 	def suiteReports = []
 	
+	def html
+	
 	String asMailBody(){
 		def body = new StringBuilder()
 		suiteReports.each{ report -> 
