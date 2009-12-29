@@ -29,6 +29,16 @@ import ch.fortysix.maven.report.taglist.TaglistReportBodyGenerator;
 class PostmanCriterionReportMojortMojo extends AbstractReportMojo {
 	
 	/**
+	 * The postfix used in the email subject 
+	 * @parameter default-value="criterion reminder"
+	 */
+	String subjectPostFix
+	
+	String getSubjectPostFix(){
+		return subjectPostFix
+	}
+	
+	/**
 	 * The xml file to read/write the postman report from/to.
 	 * @parameter default-value="${project.build.directory}/postman.xml"
 	 */
@@ -68,9 +78,7 @@ class PostmanCriterionReportMojortMojo extends AbstractReportMojo {
 		"postman-criterion-report"
 	}	
 	
-	protected void executeReport(Locale locale) throws MavenReportException {
-		// init the mojo
-		init()
+	protected void executePostmanReport(Locale locale) throws MavenReportException {
 		
 		// analyze the files
 		prepareReportXml()

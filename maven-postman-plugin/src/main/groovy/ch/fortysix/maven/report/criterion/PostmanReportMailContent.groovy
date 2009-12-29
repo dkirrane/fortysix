@@ -2,7 +2,8 @@
  * 
  */
 package ch.fortysix.maven.report.criterion
-;
+
+import java.io.File
 
 /**
  * @author Domi
@@ -11,6 +12,8 @@ package ch.fortysix.maven.report.criterion
 class PostmanReportMailContent {
 	
 	def rules = []
+	
+	def html
 	
 	String asMailBody(){
 		def body = new StringBuilder()

@@ -27,6 +27,16 @@ import ch.fortysix.maven.report.surefire.SurefireReportBodyGenerator;
  */
 class PostmanTaglistReportMojo extends AbstractReportMojo {
 	
+	/**
+	 * The postfix used in the email subject 
+	 * @parameter default-value="taglist reminder"
+	 */
+	String subjectPostFix
+	
+	String getSubjectPostFix(){
+		return subjectPostFix
+	}	
+	
 	String getNlsPrefix(){
 		"report.postman.taglist."
 	}
@@ -84,18 +94,19 @@ class PostmanTaglistReportMojo extends AbstractReportMojo {
 		tagClasses.add(tagClass)
 	}	
 	
-	def tagClass2Ancher = [:]
-	
-	protected void executeReport(Locale locale) throws MavenReportException {
-		prepareAnchers()
+	/**
+	 * do the report and send the mails
+	 */
+	protected void executePostmanReport(Locale locale) throws MavenReportException {
+		def tagClass2Ancher = prepareAnchers()
 		
 		TaglistMailCollector taglistSender = new TaglistMailCollector(log: getLog(), tagClasses: tagClasses)
-		def receiver2Mail = taglistSender.getMails(taglistReportXml)
+		def receiver2Mail = taglistSender.getMails(taglistReportXml, taglistReportHtml)
 		
 		if(!skipMails){
 			receiver2Mail.each sendReport
 		} else{
-			log.info "postamn skips sending mails!"
+			log.info "postman skips sending mails!"
 		}
 		
 		def report = new HtmlReporter(bodyGenerator: new TaglistReportBodyGenerator(receiver2TestReport: receiver2Mail, 
@@ -107,7 +118,8 @@ class PostmanTaglistReportMojo extends AbstractReportMojo {
 	/**
 	 * Parses the <code>taglist.html</code> and prepares a map with the mapping 'tagClass.displayName:htmlAncher'.
 	 */
-	void prepareAnchers(){
+	Map prepareAnchers(){
+		def tagClass2htmlAncher = [:]
 		if(taglistReportHtml){
 			// 1. parse the html
 			def doc = new XmlParser( new org.cyberneko.html.parsers.SAXParser() ).parse(taglistReportHtml)
@@ -117,12 +129,13 @@ class PostmanTaglistReportMojo extends AbstractReportMojo {
 			}.each{
 				// 3. fill them in to the prepared map
 				// each item is still a XML/XHTML Snipplet!
-				tagClass2Ancher.put it.text(), it['@href']	
+				tagClass2htmlAncher.put it.text(), it['@href']	
 			}
 			if(getLog().isDebugEnabled()){
-				tagClass2Ancher.each{  key, value -> getLog().debug "$key === $value" }
+				tagClass2htmlAncher.each{  key, value -> getLog().debug "$key === $value" }
 			}
 		}
+		return tagClass2htmlAncher
 	}
 	
 }

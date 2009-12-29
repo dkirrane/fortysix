@@ -76,10 +76,15 @@
 			<version>4.7</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
+		<!--<dependency>
 			<groupId>javax.activation</groupId>
 			<artifactId>activation</artifactId>
 			<version>1.1.1</version>
+		</dependency>-->
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.ant</groupId>
@@ -87,30 +92,22 @@
 			<version>1.7.1</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
-			<version>1.4</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.ant</groupId>
-			<artifactId>ant-javamail</artifactId>
-			<version>1.7.1</version>
-		</dependency>
-		<dependency>
 			<groupId>org.subethamail</groupId>
 			<artifactId>subethasmtp-wiser</artifactId>
 			<version>1.2</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>log4j-over-slf4j</artifactId>
 			<version>1.5.8</version>
 		</dependency>
-		<!--<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<version>1.5.8</version>
-		</dependency>-->
 		<dependency>
 			<groupId>org.apache.maven.plugin-testing</groupId>
 			<artifactId>maven-plugin-testing-harness</artifactId>
@@ -146,9 +143,28 @@
 			<artifactId>nekohtml</artifactId>
 			<version>1.9.6.2</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-email</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<!--<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.5.8</version>
+		</dependency>-->
 	</dependencies>
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.0.2</version>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.codehaus.gmaven</groupId>
 				<artifactId>gmaven-plugin</artifactId>
@@ -183,6 +199,18 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test-jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 		<extensions>
 			<extension>
@@ -192,10 +220,67 @@
 			</extension>
 		</extensions>
 	</build>
-	<repositories>
-	</repositories>
-	<pluginRepositories>
-	</pluginRepositories>
+	<profiles>
+		<profile>
+			<id>integration-tests</id>
+			<activation>
+				<property>
+					<name>shit</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<defaultGoal>install</defaultGoal>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-invoker-plugin</artifactId>
+						<version>1.5</version>
+						<configuration>
+							<filterProperties>
+								<testSmtpServerPort>9991</testSmtpServerPort>
+								<testFromAddress>from@fortysix.ch</testFromAddress>
+								<!-- passes the current build version to the test projects -->
+								<postmanPluginVersion>${project.version}</postmanPluginVersion>
+							</filterProperties>
+							<projectsDirectory>src/it</projectsDirectory>
+							<cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
+							<pomIncludes>
+								<pomInclude>*/pom.xml</pomInclude>
+							</pomIncludes>
+							<!-- this will speed up the build, it tells Maven to use the local repository as a remote repository -->
+							<settingsFile>src/it/settings.xml</settingsFile>
+							<localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
+							<preBuildHookScript>setup.groovy</preBuildHookScript>
+							<postBuildHookScript>verify.groovy</postBuildHookScript>
+							<invokerPropertiesFile>invoker.properties</invokerPropertiesFile>
+							<goals>
+								<goal>clean</goal>
+								<goal>site</goal>
+							</goals>
+						</configuration>
+						<executions>
+							<execution>
+								<id>integration-test</id>
+								<goals>
+									<goal>install</goal>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+						<dependencies>
+							<dependency>
+								<groupId>org.subethamail</groupId>
+								<artifactId>subethasmtp-wiser</artifactId>
+								<version>1.2</version>
+
+							</dependency>
+						</dependencies>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 	<reporting>
 		<plugins>
 			<plugin>
