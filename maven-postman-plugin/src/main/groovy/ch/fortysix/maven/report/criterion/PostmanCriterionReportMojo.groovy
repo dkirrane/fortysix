@@ -89,7 +89,7 @@ class PostmanCriterionReportMojortMojo extends AbstractReportMojo {
 			CriterionMailCollector sender = new CriterionMailCollector(log: getLog())
 			receiver2Mail = sender.getMails(reportFile)
 		}else{
-			getLog().warn "ReportFile is not readable ($reportFile)!"
+			getLog().warn "Postman ReportFile is not readable ($reportFile)!"
 			skipMails = true
 		}
 		
