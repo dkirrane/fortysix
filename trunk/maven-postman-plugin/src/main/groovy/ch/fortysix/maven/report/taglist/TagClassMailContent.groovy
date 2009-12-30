@@ -5,17 +5,25 @@ import java.util.Iterator;
 
 import org.apache.maven.doxia.sink.Sink;
 
+import ch.fortysix.maven.report.HtmlSnipplet;
+import ch.fortysix.maven.report.SinkSnipplet;
+import ch.fortysix.maven.report.TextSnipplet;
+
 import com.sun.mail.imap.protocol.BODY;
 
-class TagClassMailContent {
+class TagClassMailContent implements HtmlSnipplet, TextSnipplet, SinkSnipplet{
 	def tagsFromReportFile = []
 	
-	def html
+	def htmlFragment
+	
+	String html(){
+		return htmlFragment
+	}
 	
 	/**
 	 * Formats the content and builds the body 
 	 */
-	String asMailBody(){
+	String text(){
 		def body = new StringBuilder()
 		tagsFromReportFile.each{ tag ->
 			body << "\n"

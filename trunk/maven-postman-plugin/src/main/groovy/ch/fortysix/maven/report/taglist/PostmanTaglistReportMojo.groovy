@@ -120,7 +120,7 @@ class PostmanTaglistReportMojo extends AbstractReportMojo {
 	 */
 	Map prepareAnchers(){
 		def tagClass2htmlAncher = [:]
-		if(taglistReportHtml){
+		if(taglistReportHtml && taglistReportHtml.exists()){
 			// 1. parse the html
 			def doc = new XmlParser( new org.cyberneko.html.parsers.SAXParser() ).parse(taglistReportHtml)
 			// 2. get all <a>-tags starting with '#' (anchers) 
@@ -134,6 +134,15 @@ class PostmanTaglistReportMojo extends AbstractReportMojo {
 			if(getLog().isDebugEnabled()){
 				tagClass2htmlAncher.each{  key, value -> getLog().debug "$key === $value" }
 			}
+		}else{
+			getLog().warn """
+			taglist report could not be found ($taglistReportHtml).
+			This could have multiple reasons:
+			1. order of report plugin execution might not be correct.
+			   'taglist-maven-plugin' must be defined before 'maven-postman-plugin' in the pom!
+			2. The 'taglist-maven-plugin' does not generate any report information (html or xml) 
+			   if it can't find any java code.			
+			"""
 		}
 		return tagClass2htmlAncher
 	}

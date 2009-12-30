@@ -59,4 +59,9 @@ class CriterionMailCollector {
 		return receiver2Rules
 	}
 	
+	
+	private String buildHtml(){
+		
+	}
+	
 }
