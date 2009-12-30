@@ -69,10 +69,13 @@ class TaglistMailCollector {
 				}
 				
 				// get the html of the generated taglist report (taglist-plugin)
-				def html = htmlExtractor.extractHTMLTagById(htmlFile: taglistReportHtml, tagName: "div", tagId: "bodyColumn")
+				def html
+				if(taglistReportHtml.text){
+					html = htmlExtractor.extractHTMLTagById(html: taglistReportHtml.text, tagName: "div", tagId: "bodyColumn")
+				}
 				
 				// assign a mailcontent for each receiver
-				def mailContent = new TagClassMailContent(tagsFromReportFile: tags4Receiver, html: html) 
+				def mailContent = new TagClassMailContent(tagsFromReportFile: tags4Receiver, htmlFragment: html) 
 				receiver2Mail.put(aReceiver, mailContent)
 			}
 		}

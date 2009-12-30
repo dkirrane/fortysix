@@ -237,6 +237,7 @@
 						<artifactId>maven-invoker-plugin</artifactId>
 						<version>1.5</version>
 						<configuration>
+<!--							<debug>true</debug>-->
 							<filterProperties>
 								<testSmtpServerPort>9991</testSmtpServerPort>
 								<testFromAddress>from@fortysix.ch</testFromAddress>

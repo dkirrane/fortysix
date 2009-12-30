@@ -17,7 +17,6 @@ class TaglistReportBodyGenerator {
 	def tagClass2Ancher = [:]
 	
 	void generateBody(Sink sink){
-		sink.paragraph()
 		
 		sink.table()
 		sink.tableHeaderCell()
@@ -28,20 +27,15 @@ class TaglistReportBodyGenerator {
 		sink.tableHeaderCell_()
 		
 		receiver2TestReport.each { receiver, report ->
+			//			report.addToSink(sink)
 			sink.tableRow()
 			sink.tableCell()
 			sink.text receiver
 			sink.tableCell_()
 			sink.tableCell()
-			sink.text "Check out the taglist report: "		
+			sink.text "Check out these taglist reports:"		
 			sink.lineBreak()
 			report.tagsFromReportFile.each{ tag ->
-				sink.text tag.@count.toString()
-				sink.text " comments for tagClass: "
-				//				sink.bold()
-				//				sink.text tag.@name?.toString()
-				//				sink.bold_()
-				//				sink.paragraph()
 				// create a link (e.g. 'taglist.html#tag_class_1')
 				sink.link targetTaglistHtmlPage+tagClass2Ancher[tag.@name?.toString()]
 				sink.text tag.@name?.toString()
@@ -56,8 +50,7 @@ class TaglistReportBodyGenerator {
 		}
 		
 		sink.table_()
-		
-		sink.paragraph_()
+		//	
 	}
 	
 }

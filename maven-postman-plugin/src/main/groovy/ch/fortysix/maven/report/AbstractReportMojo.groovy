@@ -207,8 +207,8 @@ abstract class AbstractReportMojo extends AbstractMavenReport {
 		
 		mailSender.sendMail(from: from, 
 		subject: newSubject, 
-		txtmessage: mailContent.asMailBody(),
-		htmlmessage: mailContent.html,
+		txtmessage: mailContent.text(),
+		htmlmessage: mailContent.html(),
 		receivers: tos)
 	}	
 	
