@@ -6,6 +6,10 @@
 	<version>testing</version>
 	<name>PostmanSurfireTester</name>
 	<url>http://maven.apache.org</url>
+	<build>
+		<plugins>
+		</plugins>
+	</build>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -16,6 +20,11 @@
 	</dependencies>
 	<reporting>
 		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>surefire-report-maven-plugin</artifactId>
+				<version>2.0-beta-1</version>
+			</plugin>
 			<plugin>
 				<groupId>ch.fortysix</groupId>
 				<artifactId>maven-postman-plugin</artifactId>
