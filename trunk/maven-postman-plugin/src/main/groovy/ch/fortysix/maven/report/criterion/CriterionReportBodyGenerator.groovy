@@ -31,7 +31,7 @@ class CriterionReportBodyGeneratorerator {
 			sink.text receiver
 			sink.tableCell_()
 			sink.tableCell()
-			sink.text report.asMailBody()
+			report.addToSink(sink)
 			sink.tableCell_()
 			sink.tableRow_()
 		}

@@ -82,7 +82,7 @@ class TaglistMailCollector {
 		
 		if(log.isDebugEnabled()){
 			receiver2Mail.each {key, value -> 
-				log.debug value.asMailBody()
+				log.debug value.text()
 			}
 		}
 		
