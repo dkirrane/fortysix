@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.apache.maven.doxia.siterenderer.Renderer;
+import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.MavenReportException;
 
@@ -75,12 +76,13 @@ class PostmanSurefireReportMojoo extends AbstractReportMojo {
 	 * </ul>
 	 * Other (usefull or not...) examples:
 	 * <ul>
-	 * 	<li><code>errors > 0</code>: sends a mail if there are errors</li>
-	 * 	<li><code>skipped > failures</code>: sends mails of there are more skipped then failed test cases</li>
-	 * 	<li><code>total == skipped</code>: Sends mails if all tests are skipped</li>
+	 * 	<li><code>errors > 0</code> : sends a mail only if there are errors</li>
+	 * 	<li><code>skipped > failures</code> : sends mails if there are more skipped then failed test cases</li>
+	 * 	<li><code>total == skipped</code> : Sends mails if all tests are skipped</li>
 	 * </ul>
 	 * To avoid problems with XML syntax, one can use a <a href="http://www.w3schools.com/xmL/xml_cdata.asp">CDATA element</a>.
-	 * @parameter default-value="errors > 0"
+	 * The default only send a mail if there are errors or failures, but ignores the skipped ones.
+	 * @parameter default-value="errors > 0 || failures > 0"
 	 */
 	String groovyCondition
 	
@@ -136,18 +138,22 @@ class PostmanSurefireReportMojoo extends AbstractReportMojo {
 		binding.setVariable("total", tests);
 		
 		// - evaluate
-		def condition = groovyCondition
-		log.info "evaluating groovy condition [$condition]"
+		log.info "evaluating groovy condition [$groovyCondition]"
 		GroovyShell shell = new GroovyShell(binding);
-		Object value = shell.evaluate(condition);
+		def value 
+		try{
+			value = shell.evaluate(groovyCondition);
+		}catch (Exception e){
+			throw new MojoExecutionException("postman is not able to evaluate the configured 'groovyCondition': $groovyCondition", e)
+		}
 		boolean sendIt = value as Boolean
 		
 		if(skipMails){
-			log.info "postamn skips sending mails!"
+			log.info "postman skips sending mails!"
 		} else if(sendIt){
 			receiver2Mail.each sendReport
 		} else{
-			log.info "postman surfire report groovy condition [$condition] not fulfilled, don't send the mails..."
+			log.info "postman surfire report groovy condition [$groovyCondition] not fulfilled, don't send the mails..."
 		}
 		
 		

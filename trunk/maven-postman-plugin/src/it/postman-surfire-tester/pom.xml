@@ -33,7 +33,7 @@
 					<skipMails>false</skipMails>
 					<from>${testFromAddress}</from>
 					<mailport>${testSmtpServerPort}</mailport>
-					<groovyCondition><![CDATA[true]]></groovyCondition>
+					<!--<groovyCondition><![CDATA[true]]></groovyCondition>-->
 					<receivers>
 						<receiver>domi@pom.xml</receiver>
 						<receiver>dundy@pom.xml</receiver>
