@@ -10,65 +10,160 @@ Usage
 
  This plugin is used to send mails if a certain condition is met during the build.
 
- 
 
+*Send a mail if the testcases fail
+
+-------------------
+
+	<reporting>
+		<plugins>
+			....
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>2.4.3</version>
+			</plugin>
+			....
+			<plugin>
+				<groupId>ch.fortysix</groupId>
+				<artifactId>maven-postman-plugin</artifactId>
+				<configuration>
+					<skipMails>false</skipMails>
+					<from>builder@myserver.com</from>
+					<!--<groovyCondition><![CDATA[failures > 0]]></groovyCondition>-->
+					<receivers>
+						<receiver>domi@pom.xml</receiver>
+						<receiver>dundy@pom.xml</receiver>
+						<receiver>samy@pom.xml</receiver>
+					</receivers>
+				</configuration>
+				<reportSets>
+					<reportSet>
+						<id>surfire test mails</id>
+						<reports>
+							<report>postman-surefire-report</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			....
+		</plugins>
+	</reporting>
+
+-------------------
+
+*Send a mail if the taglist plugin finds some specific tokens
+
+-------------------
+
+	<reporting>
+		<plugins>
+			....
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>taglist-maven-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<tagListOptions>
+						<tagClasses>
+							<tagClass>
+								<displayName>Todo Domi</displayName>
+								<tags>
+									<tag>
+										<matchString>todo domi</matchString>
+										<matchType>ignoreCase</matchType>
+									</tag>
+								</tags>
+							</tagClass>
+						</tagClasses>
+					</tagListOptions>
+				</configuration>
+			</plugin>
+			....
+			<plugin>
+				<groupId>ch.fortysix</groupId>
+				<artifactId>maven-postman-plugin</artifactId>
+				<configuration>
+					<skipMails>false</skipMails>
+					<from>builder@myserver.com</from>
+				</configuration>
+				<reportSets>
+					<reportSet>
+						<id>taglist mails</id>
+						<configuration>
+							<tagClasses>
+								<tagClass>
+									<displayName>Todo Domi</displayName>
+									<receivers>
+										<receiver>domi</receiver>
+									</receivers>
+								</tagClass>
+							</tagClasses>
+						</configuration>
+						<reports>
+							<report>postman-taglist-report</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			....
+		</plugins>
+	</reporting>
+
+-------------------
  
 *Check a file for a pattern and send messages
  
  This configuration checks all the java files beneath <<<${basedir}/src/main>>> for the occurrence of the regex expressions of each rule.
  The <<<<regex>>>> tag can be used to define an expression to be searched for. 
- <<<sendOnMatch>>> is set to the default 'true', but if you want to send a messeage (mail) if the pattern is not found in the file, 
- set this one to false.
-
+ 
 -------------------
 
+	<reporting>
+		...
 		<plugins>
 			<plugin>
 				<groupId>ch.fortysix</groupId>
 				<artifactId>maven-postman-plugin</artifactId>
-				<version>0.0.2-SNAPSHOT</version>
-				<executions>
-					<execution>
-						<id>parse files</id>
-						<phase>package</phase>
-						<goals>
-							<goal>deliver</goal>
-						</goals>
-						<inherited>false</inherited>
+				<configuration>
+					<from>builder@myserver.com</from>
+					<mailport>25</mailport>
+				</configuration>
+				<reportSets>
+					<reportSet>
+						<id>criterion test set</id>
 						<configuration>
-							<from>domi@fortysix.ch</from>
 							<filesets>
 								<fileset>
 									<directory>${basedir}/src/main</directory>
 									<includes>
-										<include>**/*.java</include>
+										<include>**/*</include>
 									</includes>
 								</fileset>
 							</filesets>
 							<rules>
 								<rule>
 									<regex>.*(Hello).*</regex>
-									<recivers>
-										<reciver>domi0@xx.com</reciver>
-									</recivers>
+									<receivers>
+										<receiver>1111</receiver>
+									</receivers>
 								</rule>
 								<rule>
 									<regex>.*(Domi).*</regex>
-									<recivers>
-										<reciver>domi0@xx.com</reciver>
-										<reciver>domi1@xx.com</reciver>
-									</recivers>
-								</rule>
-								<rule>
-									<regex>(out)</regex>
-									<recivers>
-										<reciver>dude@xx.com</reciver>
-									</recivers>
+									<receivers>
+										<receiver>1111</receiver>
+									</receivers>
 								</rule>
 							</rules>
 						</configuration>
-					</execution>
-				</executions>
+						<reports>
+							<report>postman-criterion-report</report>
+						</reports>
+					</reportSet>
+				</reportSets>
 			</plugin>
+			...
+		</reporting>
+					
 
 -------------------
