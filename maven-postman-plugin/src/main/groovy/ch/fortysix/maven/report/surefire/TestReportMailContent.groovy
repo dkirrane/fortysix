@@ -14,7 +14,7 @@ import ch.fortysix.maven.report.TextSnipplet;
  * @author Domi
  *
  */
-class TestReportMailContent implements HtmlSnipplet, TextSnipplet, SinkSnipplet{
+class TestReportMailContent implements HtmlSnipplet, TextSnipplet{
 	
 	def suiteReports = []
 	
@@ -31,19 +31,6 @@ class TestReportMailContent implements HtmlSnipplet, TextSnipplet, SinkSnipplet{
 			body << report.name << "\n"
 		}
 		body.toString()
-	}
-	
-	void addToSink(Sink sink){
-		sink.table()
-		sink.tableRow()
-		suiteReports.each{ report ->
-			sink.tableRow()
-			sink.tableCell()
-			sink.text report.name
-			sink.tableCell_()
-			sink.tableRow_()
-		}
-		sink.table_()
 	}
 	
 }

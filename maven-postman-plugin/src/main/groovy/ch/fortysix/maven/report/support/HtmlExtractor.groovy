@@ -9,77 +9,43 @@ package ch.fortysix.maven.report.support;
  */
 class HtmlExtractor {
 	
-	String extractHTMLTagById_old(Map args){
-		assert args.htmlFile
-		assert args.tagName
-		assert args.tagId
-		
-		def taglistReportHtml = args.htmlFile
-		def tagName = args.tagName.toUpperCase()
-		def tagId = args.tagId
-		
-		def htmlTag
-		//		if(taglistReportHtml && taglistReportHtml.isFile()){
-		// 1. parse the html
-		//			def doc = new XmlParser( new org.cyberneko.html.parsers.SAXParser() ).parse(taglistReportHtml)
-		//			def divHtml = "" << new groovy.xml.StreamingMarkupBuilder().bind {xml -> xml.mkp.yield divTag}
-		
-		//			def doc = new XmlSlurper( new org.cyberneko.html.parsers.SAXParser() ).parse(taglistReportHtml)
-		//			println "-->"+doc.getClass()
-		//			println "-->"+doc.getBody().toString()
-		
-		//			htmlTag = doc.find {
-		//				println "*** $it"
-		//				it['@id'] == tagId  
-		//			}
-		
-		
-		// 2. get the first tag with the given id 
-		//			htmlTag = doc.depthFirst()."$tagName".find{
-		//			htmlTag = doc.find{
-		//				println "OK? $it"
-		//				it['@id'] == tagId 
-		//			}
-		//	}
-		//		println "TAG: "+htmlTag?.text()
-		return htmlTag
-		//		return args.htmlFile.text
+	def private final static PARSER = new org.cyberneko.html.parsers.SAXParser()
+	static{
+		// we want all namespace definitions from the original html to disappear 
+		PARSER.setFeature("http://xml.org/sax/features/namespaces", false);
+		// all the elements should end up in lower case
+		PARSER.setProperty("http://cyberneko.org/html/properties/names/elems", "lower");
 	}
 	
-	
-	String extractHTMLTagById(Map args){
+	/**
+	 * Searches for the first html tag given by 'tagName' and the 'tagId' within the passed 'html' content.
+	 */
+	synchronized String extractHTMLTagById(Map args){
 		assert args.html
 		assert args.tagName
 		assert args.tagId
 		
 		def html = args.html
-		def tagName = args.tagName.toUpperCase()
+		def tagName = args.tagName.toLowerCase()
 		def tagId = args.tagId
 		
-		def htmlTag
 		// 1. parse the html
-		//			def doc = new XmlParser( new org.cyberneko.html.parsers.SAXParser() ).parse(taglistReportHtml)
-		//			def divHtml = "" << new groovy.xml.StreamingMarkupBuilder().bind {xml -> xml.mkp.yield divTag}
+		def doc = new XmlSlurper(PARSER).parseText(html)
 		
-		//		def doc = new XmlSlurper( new org.cyberneko.html.parsers.SAXParser() ).parseText(html)
-		//		println "-->"+doc.getClass()
-		//		println "-->"+doc.getBody().toString()
-		//		
-		//		htmlTag = doc.find {
-		//			println "*** $it"
-		//			it['@id'] == tagId  
-		//		}
+		// 2. search for the requested TAG
+		//    get the first tag with the given id (all tags are lower case, see parser config)
+		def divTag = doc.'body'."$tagName".find { 
+			if(it.@id){
+				it.@id == tagId
+			}
+		}
 		
+		// 3. get the result as a String
+		def htmlTag = "" << new groovy.xml.StreamingMarkupBuilder().bind {xml ->
+			xml.mkp.yield divTag
+		}
 		
-		// 2. get the first tag with the given id 
-		//			htmlTag = doc.depthFirst()."$tagName".find{
-		//			htmlTag = doc.find{
-		//				println "OK? $it"
-		//				it['@id'] == tagId 
-		//			}
-		//		println "TAG: "+htmlTag?.text()
-		//		return htmlTag
-		return args.html
+		return htmlTag
 	}	
 	
 }

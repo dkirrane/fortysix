@@ -15,14 +15,14 @@ class SurefireReportBodyGenerator {
 	
 	void generateBody(Sink sink){
 		sink.paragraph()
-		
+		sink.text "The reminder mail check the test results was send to this users."
 		sink.table()
 		sink.tableHeaderCell()
 		sink.text "Receiver"
 		sink.tableHeaderCell_()
-		sink.tableHeaderCell()
-		sink.text "Mail Content"
-		sink.tableHeaderCell_()
+		//		sink.tableHeaderCell()
+		//		sink.text "Mail Content"
+		//		sink.tableHeaderCell_()
 		
 		receiver2TestReport.each { receiver, report ->
 			sink.tableRow()
@@ -30,7 +30,7 @@ class SurefireReportBodyGenerator {
 			sink.text receiver
 			sink.tableCell_()
 			sink.tableCell()
-			report.addToSink(sink)
+			sink.text receiver
 			sink.tableCell_()
 			sink.tableRow_()
 		}

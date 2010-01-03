@@ -92,6 +92,18 @@ class PostmanSurefireReportMojoo extends AbstractReportMojo {
 	
 	protected void executePostmanReport(Locale locale) throws MavenReportException {
 		
+		if(!testReportsDirectory || !testReportsDirectory.exists()){
+			getLog().warn """
+				'testReportsDirectory' could not be found ($testReportsDirectory).
+				This could have multiple reasons:
+				1. order of report plugin execution might not be correct.
+				   'maven-surefire-report-plugin' must be defined before 'maven-postman-plugin' in the pom!
+				2. The 'taglist-maven-plugin' does not generate any report information (html or xml) 
+				   if it can't find any test cases.			
+				"""
+			return
+		}
+		
 		SurefireMailCollector testReportSender = new SurefireMailCollector(log: getLog(), reportFilePattern: reportFilePattern)
 		def mailContent = testReportSender.getSingleMail(testReportsDirectory)
 		

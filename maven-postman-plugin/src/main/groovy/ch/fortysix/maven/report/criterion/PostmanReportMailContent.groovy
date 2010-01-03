@@ -45,10 +45,22 @@ class PostmanReportMailContent implements HtmlSnipplet, TextSnipplet, SinkSnippl
 	void addToSink(Sink sink){
 		sink.table()
 		sink.tableRow()
-		suiteReports.each{ report ->
+		rules.each{ tag ->
 			sink.tableRow()
 			sink.tableCell()
-			sink.text report.name
+			sink.text tag.regex.text()
+			tag.result.eachWithIndex{ result, i ->
+				sink.table()
+				sink.tableRow()
+				sink.tableCell()
+				sink.text "$i file: " 
+				sink.text result.file.text() 
+				//				result.match.each{
+				//					body << "\tMatch: " << it << "\n" 
+				//				}
+				sink.tableCell_()
+				sink.tableRow_()
+			}			
 			sink.tableCell_()
 			sink.tableRow_()
 		}
