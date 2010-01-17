@@ -290,13 +290,14 @@
 				<version>2.1.2</version>
 				<reportSets>
 					<reportSet>
+						<id></id>
 						<reports>
 							<!--<report>dependencies</report>-->
-							<report>project-team</report>
-							<report>cim</report>
 							<!--<report>issue-tracking</report>-->
+							<report>project-team</report>
 							<report>license</report>
 							<report>scm</report>
+							<report>dependencies</report>
 						</reports>
 					</reportSet>
 				</reportSets>
