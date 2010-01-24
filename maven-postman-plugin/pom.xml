@@ -355,6 +355,7 @@
 						<version>1.0-alpha-4</version>
 						<configuration>
                             <keyname>E062B7CF</keyname>
+                            <passphrase>${gpg.passphrase}</passphrase>
                         </configuration>
 						<executions>
 							<execution>
