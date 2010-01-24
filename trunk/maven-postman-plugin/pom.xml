@@ -4,7 +4,7 @@
 	<artifactId>maven-postman-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
 	<name>Postman mail plugin</name>
-	<version>0.0.6-SNAPSHOT</version>
+	<version>0.0.7</version>
 	<inceptionYear>2009</inceptionYear>
 	<description>Enables conditional sending of mails in a build. The purpose of the plugin is to support conditional emailing (e.g. send an email if a file contains a certain string or there like)</description>
 	<url>http://doc.fortysix.ch/maven/maven-postman-plugin</url>
@@ -22,9 +22,9 @@
 		<doxiaVersion>1.1.2</doxiaVersion>
 	</properties>
 	<scm>
-		<connection>scm:svn:https://fortysix.googlecode.com/svn/trunk/maven-postman-plugin</connection>
-		<developerConnection>scm:svn:https://fortysix.googlecode.com/svn/trunk/maven-postman-plugin</developerConnection>
-		<url>http://fortysix.googlecode.com/svn/trunk/maven-postman-plugin</url>
+		<connection>scm:svn:https://fortysix.googlecode.com/svn/tags/R007</connection>
+		<developerConnection>scm:svn:https://fortysix.googlecode.com/svn/tags/R007</developerConnection>
+		<url>http://fortysix.googlecode.com/svn/tags/R007</url>
 	</scm>
 	<developers>
 		<developer>
@@ -45,7 +45,8 @@
 		<repository>
 			<id>fortysix-releases</id>
 			<name>Staging Repository</name>
-			<url>http://oss.sonatype.org/content/groups/fortysix-with-staging</url>
+			<!--<url>http://oss.sonatype.org/content/groups/fortysix-with-staging</url>-->
+			<url>http://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
 		<snapshotRepository>
 			<id>fortysix-snapshots</id>
@@ -338,6 +339,33 @@
 				</plugins>
 			</build>
 		</profile>
+		<profile>
+			<id>release-sign-artifacts</id>
+			<activation>
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.0-alpha-4</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 	<reporting>
 		<plugins>
@@ -347,7 +375,7 @@
 				<version>2.1.2</version>
 				<reportSets>
 					<reportSet>
-						<id></id>
+						<id />
 						<reports>
 							<report>issue-tracking</report>
 							<report>project-team</report>
