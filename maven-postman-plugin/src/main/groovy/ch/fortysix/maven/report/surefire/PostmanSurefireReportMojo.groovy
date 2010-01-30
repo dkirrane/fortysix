@@ -67,7 +67,7 @@ class PostmanSurefireReportMojoo extends AbstractReportMojo {
 	
 	/**
 	 * This allows to redefine the condition to send the mail. e.g. one can define that there 
-	 * must not be more then 20 skipped test cases (<code>skipped > 20</code>.
+	 * must not be more then 20 skipped test cases (<code>skipped > 20</code>).
 	 * The default condition sends mails if there are any errors.
 	 * The following variables are available for usage in the condition:
 	 * <ul>
