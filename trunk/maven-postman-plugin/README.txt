@@ -19,8 +19,16 @@ Make a release:
 ===============
 First Install GPG (http://www.gnupg.org/) see http://www.sonatype.com/people/2010/01/how-to-generate-pgp-signatures-with-maven/
 $> mvn release:prepare 
-$> mvn release:perform 
-$> mvn site-deploy
+# do to a bug (http://jira.codehaus.org/browse/MGPG-9), the release:perform needs some additional arguments:
+# $> mvn -Dgpg.passphrase="XXXX" -Darguments="-Dgpg.passphrase=XXXX" release:perform
+# 		<profile>
+#			<id>domi-default</id>
+#			<properties>
+#			       <gpg.keyname>XXX</gpg.keyname>
+#			       <gpg.passphrase>XXXXXXXX</gpg.passphrase>
+#			</properties>
+# by adding this information to the settigns.xml, it is no longer needed on the CML:
+$> mvn release:perform
 
 
 
