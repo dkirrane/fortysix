@@ -4,7 +4,7 @@
 	<artifactId>maven-postman-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
 	<name>Postman mail plugin</name>
-	<version>0.0.7-SNAPSHOT</version>
+	<version>0.0.7</version>
 	<inceptionYear>2009</inceptionYear>
 	<description>Enables conditional sending of mails in a build. The purpose of the plugin is to support conditional emailing (e.g. send an email if a file contains a certain string or there like)</description>
 	<url>http://doc.fortysix.ch/maven/maven-postman-plugin</url>
@@ -22,9 +22,9 @@
 		<doxiaVersion>1.1.2</doxiaVersion>
 	</properties>
 	<scm>
-		<connection>scm:svn:https://fortysix.googlecode.com/svn/trunk/maven-postman-plugin</connection>
-		<developerConnection>scm:svn:https://fortysix.googlecode.com/svn/trunk/maven-postman-plugin</developerConnection>
-		<url>http://fortysix.googlecode.com/svn/trunk/maven-postman-plugin</url>
+		<connection>scm:svn:https://fortysix.googlecode.com/svn/tags/maven-postman-plugin/maven-postman-plugin-0.0.7</connection>
+		<developerConnection>scm:svn:https://fortysix.googlecode.com/svn/tags/maven-postman-plugin/maven-postman-plugin-0.0.7</developerConnection>
+		<url>http://fortysix.googlecode.com/svn/tags/maven-postman-plugin/maven-postman-plugin-0.0.7</url>
 	</scm>
 	<developers>
 		<developer>
