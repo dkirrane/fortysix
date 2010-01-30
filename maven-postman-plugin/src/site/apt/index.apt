@@ -12,12 +12,12 @@ Maven 2 SuperDuper Plugin
 
 * Goals Overview
 
-  * {{{plugin-info.html}goals}} gives you an overview of the available goals.
+  * {{{./plugin-info.html}goals}} gives you an overview of the available goals.
 
   []
 
 * Usage
 
-  Instructions on how to use the Plugin can be found {{{usage.html}here}}.
+  Instructions on how to use the Plugin can be found {{{./usage.html}here}}.
 
 
