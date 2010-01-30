@@ -22,6 +22,9 @@ import ch.fortysix.maven.report.support.SinkReporter;
 import ch.fortysix.maven.report.taglist.TaglistReportBodyGenerator;
 
 /**
+ * The functionality is close to the one of the <code>org.codehaus.mojo:taglist-maven-plugin</code>, 
+ * but not limited to Java source code. It's also able to send mails about the findings.
+ * 
  * @author Domi
  * @goal postman-criterion-report
  * @phase site

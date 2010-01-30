@@ -19,8 +19,9 @@ import ch.fortysix.maven.report.support.SinkReporter;
 import ch.fortysix.maven.report.surefire.SurefireReportBodyGenerator;
 
 /**
- * This plugin is able to send 'reminder mails' based on the findings of the <code>org.codehaus.mojo:taglist-maven-plugin</code>.
- * One should use at least version 2.4 of the taglist-plugin
+ * This goal is able to send 'reminder mails' based on the findings of the <code>org.codehaus.mojo:taglist-maven-plugin</code>.
+ * One should use at least version 2.4 of the taglist-plugin.
+ * 
  * @author Domi
  * @goal postman-taglist-report
  * @phase site
