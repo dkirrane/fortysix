@@ -4,7 +4,7 @@
 	<artifactId>maven-postman-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
 	<name>Postman mail plugin</name>
-	<version>0.0.7</version>
+	<version>0.0.7-SNAPSHOT</version>
 	<inceptionYear>2009</inceptionYear>
 	<description>Enables conditional sending of mails in a build. The purpose of the plugin is to support conditional emailing (e.g. send an email if a file contains a certain string or there like)</description>
 	<url>http://doc.fortysix.ch/maven/maven-postman-plugin</url>
