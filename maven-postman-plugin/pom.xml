@@ -20,6 +20,7 @@
 		<version.GMaven>1.2</version.GMaven>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<doxiaVersion>1.1.2</doxiaVersion>
+		<wiserVersion>1.2</wiserVersion>
 	</properties>
 	<scm>
 		<connection>scm:svn:https://fortysix.googlecode.com/svn/trunk/maven-postman-plugin</connection>
@@ -141,7 +142,7 @@
 		<dependency>
 			<groupId>org.subethamail</groupId>
 			<artifactId>subethasmtp-wiser</artifactId>
-			<version>1.2</version>
+			<version>${wiserVersion}</version>
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>
@@ -157,6 +158,16 @@
 				<plugin>
 					<artifactId>maven-antrun-plugin</artifactId>
 					<version>1.3</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>versions-maven-plugin</artifactId>
+					<version>1.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<version>1.0-alpha-4</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-clean-plugin</artifactId>
@@ -214,6 +225,21 @@
 					<groupId>org.codehaus.gmaven</groupId>
 					<artifactId>gmaven-plugin</artifactId>
 					<version>1.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-invoker-plugin</artifactId>
+					<version>1.5</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-pdf-plugin</artifactId>
+					<version>1.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-project-info-reports-plugin</artifactId>
+					<version>2.1.2</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -276,6 +302,23 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pdf-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>pdf</id>
+						<phase>site</phase>
+						<goals>
+							<goal>pdf</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.reporting.outputDirectory}</outputDirectory>
+							<includeReports>false</includeReports>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 		<extensions>
 			<extension>
@@ -300,7 +343,6 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-invoker-plugin</artifactId>
-						<version>1.5</version>
 						<configuration>
 							<!--							<debug>true</debug>-->
 							<filterProperties>
@@ -338,8 +380,7 @@
 							<dependency>
 								<groupId>org.subethamail</groupId>
 								<artifactId>subethasmtp-wiser</artifactId>
-								<version>1.2</version>
-
+								<version>${wiserVersion}</version>
 							</dependency>
 						</dependencies>
 					</plugin>
@@ -359,7 +400,6 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.0-alpha-4</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
@@ -379,7 +419,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.1.2</version>
 				<reportSets>
 					<reportSet>
 						<id />
@@ -388,7 +427,7 @@
 							<report>project-team</report>
 							<report>license</report>
 							<report>scm</report>
-							<report>dependencies</report>
+							<!--<report>dependencies</report>-->
 						</reports>
 					</reportSet>
 				</reportSets>
@@ -408,12 +447,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>versions-maven-plugin</artifactId>
-				<version>1.1</version>
 			</plugin>
-			<!--
-				<plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-changes-plugin</artifactId> <reportSets> <reportSet> <reports>
-				<report>changes-report</report> </reports> </reportSet> </reportSets> </plugin>
-			-->
 		</plugins>
 	</reporting>
 </project>
