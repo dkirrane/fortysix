@@ -333,7 +333,7 @@
 			<id>integration-tests</id>
 			<activation>
 				<property>
-					<name>shit</name>
+					<name>it</name>
 					<value>true</value>
 				</property>
 			</activation>

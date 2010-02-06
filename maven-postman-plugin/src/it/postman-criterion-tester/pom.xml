@@ -36,14 +36,14 @@
 					<reportSet>
 						<id>criterion test set</id>
 						<configuration>
-							<filesets>
-								<fileset>
+							<fileSets>
+								<fileSet>
 									<directory>${basedir}/src/main</directory>
 									<includes>
 										<include>**/*</include>
 									</includes>
-								</fileset>
-							</filesets>
+								</fileSet>
+							</fileSets>
 							<rules>
 								<rule>
 									<regex>.*(Hello).*</regex>
