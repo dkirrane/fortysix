@@ -98,51 +98,15 @@ import org.apache.maven.plugin.logging.Log
 			}
 		}
 		
+		if(args.attachments){
+			args.attachments.each { email.attach(it.url, , it.name, it.description) }
+		}
+		
 		email.setDebug(log.isDebugEnabled());
 		
 		email.send();
 		
 	}	
-	
-	void sendMail2(Map args){
-		assert args.subject 
-		assert args.from
-		assert args.txtmessage
-		assert args.receivers
-		
-		if(!session){
-			assert sessionProps
-			session = Session.getDefaultInstance(sessionProps, auth)
-			session.setDebug( log.isDebugEnabled() );
-		}
-		
-		log.info "send a mail..."
-		
-		// Construct the message
-		def msg = new MimeMessage(session)
-		def devteam = new InternetAddress(args.receivers[0])
-		msg.from = new InternetAddress(args.from)
-		msg.sentDate = new Date()
-		msg.subject = args.subject
-		msg.setRecipient(Message.RecipientType.TO, devteam)
-		if(args.cc){
-			def partners = new InternetAddress(args.cc)
-			msg.setRecipient(Message.RecipientType.CC, partners)
-		}		
-		msg.setContent(args.txtmessage, "text/html")
-		
-		// Send the message
-		try	{
-			Transport.send(msg)
-		}
-		catch (e) {
-			log.warn("failed to send mail: " + e.getMessage())
-			if(failonerror){
-				throw e
-			}
-		}
-		
-	}
 	
 	
 	/**

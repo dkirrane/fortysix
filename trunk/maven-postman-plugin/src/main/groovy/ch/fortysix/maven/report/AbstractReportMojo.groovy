@@ -145,7 +145,7 @@ abstract class AbstractReportMojo extends AbstractMavenReport {
 	def mailSender
 	
 	/**
-	 * prefix within the bundle files - has to be overwritten by implemtors!
+	 * prefix within the bundle files - has to be overwritten by implementors!
 	 */
 	abstract String getNlsPrefix()
 	
