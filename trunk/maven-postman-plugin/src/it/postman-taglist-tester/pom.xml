@@ -130,7 +130,7 @@
 							</tagClasses>
 						</configuration>
 						<reports>
-							<report>postman-taglist-report</report>
+							<report>taglist-mail</report>
 						</reports>
 					</reportSet>
 				</reportSets>
