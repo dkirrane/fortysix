@@ -14,6 +14,7 @@ import ch.fortysix.maven.plugin.util.MailSenderContext;
 import ch.fortysix.maven.report.support.MailSender;
 
 /**
+ * Sends a mail with optional attachments.
  * @author Domi
  * @goal send-mail
  */
@@ -62,27 +63,28 @@ class MailSenderMojo extends AbstractSenderMojo {
 	
 	
 	public void executeInternal(){
-		assert attachmentSets
 		def filesToAttach = []
-		FileSetManager fileSetManager = new FileSetManager(getLog())
-		attachmentSets.each{
-			def allIncludes = convertToFileList(it.getDirectory(), fileSetManager.getIncludedFiles( it ))
-			allIncludes.each{ oneFile ->
-				
-				if(oneFile.exists()){
-					getLog().info "add attachment $oneFile"
-					filesToAttach << [oneFile.toURL(), oneFile.name, oneFile.name]
-				}else{
-					getLog().warn "attachment $oneFile does not exist"	
+		if(attachmentSets){
+			FileSetManager fileSetManager = new FileSetManager(getLog())
+			attachmentSets.each{
+				def allIncludes = convertToFileList(it.getDirectory(), fileSetManager.getIncludedFiles( it ))
+				allIncludes.each{ oneFile ->
+					
+					if(oneFile.exists()){
+						getLog().info "add attachment $oneFile"
+						filesToAttach << [url: oneFile.toURL(), name: oneFile.name, description: oneFile.name]
+					}else{
+						getLog().warn "attachment $oneFile does not exist"	
+					}
 				}
-			}
-		}	
-		
+			}	
+		}
 		// prepare mail body, file content overrules plain text
 		def htmlBody = htmlMessageFile?.text ? htmlMessageFile?.text : htmlMessage
 		def txtBody =  textMessageFile?.text ? textMessageFile?.text : textMessage
 		
 		def mail = [receivers: receivers, from: from, subject: subject, text: txtBody, html: htmlBody, attachments: filesToAttach]
+		
 		def mails = [mail]
 		mails.each context.sendReport 
 	}

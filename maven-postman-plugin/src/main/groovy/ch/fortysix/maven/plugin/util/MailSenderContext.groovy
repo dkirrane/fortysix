@@ -122,7 +122,7 @@ class MailSenderContext {
 					getLog().info "replace [$receiver] by [$email]"
 					receiver = email
 				}else{
-					getLog().warn "not able to find email for [$receiver]"
+					getLog().warn "not able to find email address for [$receiver]"
 					// exit the closure
 					return
 				}
@@ -132,7 +132,6 @@ class MailSenderContext {
 		}
 		
 		
-		def attchements = []
 		def txt = mailContent.text ? mailContent.text : "No text content defined"
 		def html = mailContent.html ? mailContent.html : "<body>No html content defined</body>"
 		
@@ -141,7 +140,7 @@ class MailSenderContext {
 		txtmessage: txt,
 		htmlmessage: html,
 		receivers: resolvedReceivers,
-		attchements: attchements)
+		attachments: mailContent.attachments)
 	}		
 	
 }
