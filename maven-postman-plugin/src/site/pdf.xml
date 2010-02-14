@@ -10,8 +10,10 @@
 
 	<toc name="Table of Contents">
 		<item name="Introduction" ref="index.apt" />
-		<item name="Usage" ref="usage.apt" />
-		<item name="Goals" ref="plugin-info.html" />
+		<item name="Goals" ref="plugin-info.apt" />
+		<item name="Send mail" ref="send-mail.apt" />
+		<item name="Testfailure notification" ref="surefire-mail.apt" />
+		<item name="Taglist notification" ref="taglist-mail.apt" />
 	</toc>
 
 	<cover>
