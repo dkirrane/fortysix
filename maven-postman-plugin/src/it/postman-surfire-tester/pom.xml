@@ -44,7 +44,7 @@
 					<reportSet>
 						<id>surfire test mails</id>
 						<reports>
-							<report>postman-surefire-report</report>
+							<report>surefire-mail</report>
 						</reports>
 					</reportSet>
 				</reportSets>

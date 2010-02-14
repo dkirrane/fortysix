@@ -10,7 +10,7 @@ taglist-mail
 
  Send a mail if the taglist plugin finds some specific tokens.
  
- The goal collects the needed information from the <<<taglist-maven-plugin>>>, this plugin therfore has to
+ This report collects the needed information from the <<<taglist-maven-plugin>>>, this plugin therfore has to
  be executed befor the postman plugin. This can be achieved by defining it in the correct order in your pom.  
 
 -------------------

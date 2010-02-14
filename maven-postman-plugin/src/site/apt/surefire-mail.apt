@@ -11,7 +11,7 @@ surefire-mail
  Send a mail if the testcases fail. This is usefull if you have desided not to have the full build failing if 
  your testcases fail (for any reason, usefull or not...).
 
- The goal collects the needed information from the <<<maven-surefire-report-plugin>>>, this plugin therfore has to
+ This report collects the needed information from the <<<maven-surefire-report-plugin>>>, this plugin therfore has to
  be executed befor the postman plugin. This can be achieved by defining it in the correct order in your pom.  
 
  The property <<<groovyCondition>>> allows you to redefine the condition to send the mail. e.g. one can define that 
