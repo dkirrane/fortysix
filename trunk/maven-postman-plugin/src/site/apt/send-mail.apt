@@ -6,9 +6,9 @@
  14 February 2010
  ------
 
-Send a mail
+send-mail
 
- The <<<send-mail>>> allows you to send a mail during the build, optional you can add attachments too.
+ The <<<send-mail>>> goal allows you to send a mail during the build, optional you can add attachments too.
 
 -------------------
 
