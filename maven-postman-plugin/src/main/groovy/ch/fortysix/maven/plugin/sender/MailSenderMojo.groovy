@@ -21,12 +21,11 @@ import ch.fortysix.maven.report.support.MailSender;
 class MailSenderMojo extends AbstractSenderMojo {
 	
 	/**
-	 * A list of <code>attachmentSet</code>s to be attached to the mail.
-	 * It is the same as a fileSet and also supports 'includes' and 'excludes'.
+	 * A list of <code>fileSet</code>s to be attached to the mail.
 	 *
 	 * @parameter
 	 */
-	private List attachmentSets
+	private List fileSets
 	
 	private MailSenderContext context 
 	
@@ -64,9 +63,9 @@ class MailSenderMojo extends AbstractSenderMojo {
 	
 	public void executeInternal(){
 		def filesToAttach = []
-		if(attachmentSets){
+		if(fileSets){
 			FileSetManager fileSetManager = new FileSetManager(getLog())
-			attachmentSets.each{
+			fileSets.each{
 				def allIncludes = convertToFileList(it.getDirectory(), fileSetManager.getIncludedFiles( it ))
 				allIncludes.each{ oneFile ->
 					

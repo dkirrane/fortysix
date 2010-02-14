@@ -91,7 +91,7 @@ abstract class AbstractReportMojo extends AbstractMavenReport {
 	
 	/**
 	 * Email subject line. 
-	 * @parameter default-value="${artifactId}: "
+	 * @parameter default-value="[${project.artifactId}] "
 	 */
 	String subject
 	

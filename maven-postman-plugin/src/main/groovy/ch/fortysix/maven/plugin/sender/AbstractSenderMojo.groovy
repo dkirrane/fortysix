@@ -75,7 +75,7 @@ abstract class AbstractSenderMojo extends GroovyMojo {
 	
 	/**
 	 * Email subject line. 
-	 * @parameter default-value="[maven-postman-plugin] ${project.artifactId}: "
+	 * @parameter default-value="[${project.artifactId}]"
 	 */
 	String subject
 	
