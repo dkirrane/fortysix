@@ -29,7 +29,7 @@ class PostmanSurefireReportMojoo extends AbstractReportMojo {
 	
 	/**
 	 * The postfix used in the email subject 
-	 * @parameter default-value="surfire tests reminder"
+	 * @parameter default-value="surfire test notification"
 	 */
 	String subjectPostFix
 	
@@ -121,7 +121,8 @@ class PostmanSurefireReportMojoo extends AbstractReportMojo {
 		
 		////////////////////////////////////////////////////
 		//
-		// evaluate if the condition tells to send the mails
+		// evaluate if the condition tells us to send the mails
+		
 		// - prepare variables
 		def errors = mailContent.suiteReports.inject(0) { count, suiteReport -> count + suiteReport.errors }
 		log.debug "ERRORS: "+ errors

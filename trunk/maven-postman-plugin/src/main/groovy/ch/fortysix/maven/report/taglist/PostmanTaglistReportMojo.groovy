@@ -30,7 +30,7 @@ class PostmanTaglistReportMojo extends AbstractReportMojo {
 	
 	/**
 	 * The postfix used in the email subject 
-	 * @parameter default-value="taglist reminder"
+	 * @parameter default-value="taglist notification"
 	 */
 	String subjectPostFix
 	
