@@ -12,7 +12,7 @@ $> export MAVEN_OPTS
 
 Maven Profiles:
 ===============
-"integration-tests" - configures the integration tests, activation with: -Dshit
+"integration-tests" - configures the integration tests, activation with: -Dit
 
 Deploy a new version (SNAPSHOT):
 =====================
@@ -30,7 +30,7 @@ Add this to the settings.xml
 			</properties>
 $> mvn release:prepare 
 $> mvn release:perform
-second way to get around a bug (http://jira.codehaus.org/browse/MGPG-9): $> mvn -Dgpg.passphrase="XXXX" -Darguments="-Dgpg.passphrase=XXXX" release:perform
+a second way to get around a bug (http://jira.codehaus.org/browse/MGPG-9): $> mvn -Dgpg.passphrase="XXXX" -Darguments="-Dgpg.passphrase=XXXX" release:perform
 
 Run integration tests:
 ======================

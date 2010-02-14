@@ -99,7 +99,12 @@ import org.apache.maven.plugin.logging.Log
 		}
 		
 		if(args.attachments){
-			args.attachments.each { email.attach(it.url, , it.name, it.description) }
+			args.attachments.each {
+				log.debug "add this attachment $it"
+				email.attach(it.url, it.name, it.description) 
+			}
+		}else{
+			log.debug "no attachment..."		
 		}
 		
 		email.setDebug(log.isDebugEnabled());
