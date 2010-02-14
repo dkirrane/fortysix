@@ -25,8 +25,9 @@ import ch.fortysix.maven.report.taglist.TaglistReportBodyGenerator;
  * The functionality is close to the one of the <code>org.codehaus.mojo:taglist-maven-plugin</code>, 
  * but not limited to Java source code. It's also able to send mails about the findings.
  * 
+ * 
  * @author Domi
- * @goal postman-criterion-report
+ * goal criterion-report-This-goal-is-disabled
  * @phase site
  */
 class PostmanCriterionReportMojortMojo extends AbstractReportMojo {

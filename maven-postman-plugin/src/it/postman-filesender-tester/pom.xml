@@ -48,14 +48,14 @@
 								<receiver>9999</receiver>
 								<receiver>anyone@sink.com</receiver>
 							</receivers>
-							<attachmentSets>
-								<attachmentSet>
+							<fileSets>
+								<fileSet>
 									<directory>${basedir}/src/main</directory>
 									<includes>
 										<include>**/*.pdf</include>
 									</includes>
-								</attachmentSet>
-							</attachmentSets>
+								</fileSet>
+							</fileSets>
 						</configuration>
 					</execution>
 				</executions>

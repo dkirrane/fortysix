@@ -23,7 +23,7 @@ import ch.fortysix.maven.report.surefire.SurefireReportBodyGenerator;
  * One should use at least version 2.4 of the taglist-plugin.
  * 
  * @author Domi
- * @goal postman-taglist-report
+ * @goal taglist-mail
  * @phase site
  */
 class PostmanTaglistReportMojo extends AbstractReportMojo {

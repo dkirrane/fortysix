@@ -22,7 +22,7 @@ import ch.fortysix.maven.report.support.SinkReporter;
  * Sends mails based on surefire (test) results.
  * 
  * @author Domi
- * @goal postman-surefire-report
+ * @goal surefire-mail
  * @phase site
  */
 class PostmanSurefireReportMojoo extends AbstractReportMojo {

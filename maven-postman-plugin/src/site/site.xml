@@ -7,7 +7,9 @@
 		<menu name="Overview">
 			<item name="Introduction" href="./index.html" />
 			<item name="Goals" href="./plugin-info.html" />
-			<item name="Usage" href="./usage.html" />
+			<item name="Send mail" href="./send-mail.html" />
+			<item name="Testfailure notification" href="./surefire-mail.html" />
+			<item name="Taglist notification" href="./taglist-mail.html" />
 			<!--<item name="FAQ" href="faq.html"/>-->
 			<item name="PDF" href="./maven-pdf-plugin.pdf" />
 		</menu>

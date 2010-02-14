@@ -1,0 +1,80 @@
+ ------
+ Usage
+ ------
+ Dominik Bartholdi
+ ------
+ 7 November 2009
+ ------
+
+Usage
+
+ Send a mail if the testcases fail. This is usefull if you have desided not to have the full build failing if 
+ your testcases fail (for any reason, usefull or not...).
+
+ The goal collects the needed information from the <<<maven-surefire-report-plugin>>>, this plugin therfore has to
+ be executed befor the postman plugin. This can be achieved by defining it in the correct order in your pom.  
+
+ The property <<<groovyCondition>>> allows you to redefine the condition to send the mail. e.g. one can define that 
+ there must not be more then 20 skipped test cases (skipped > 20). The default condition sends mails if there are any errors. The following variables are available for usage in the condition:
+
+    * <<<errors>>>: number of all errors while running surefire
+    
+    * <<<skipped>>>: number of all skipped test cases
+    
+    * <<<failures>>>: number of all failures in the test cases
+    
+    * <<<total>>>: number of all test cases
+
+ Other (usefull or not...) examples:
+
+    * <<<errors > 0>>> : sends a mail only if there are errors
+    
+    * <<<skipped > failures>>> : sends mails if there are more skipped then failed test cases
+    
+    * <<<total == skipped>>> : Sends mails if all tests are skipped
+
+ To avoid problems with XML syntax, one can use a CDATA element. The default only send a mail if there are errors or failures, but ignores the skipped ones.
+ 
+ Default value is: <<<errors > 0 || failures > 0>>> 
+ 
+ As this is a report goal, it will also create a report about whom it did send a mail to. 
+
+-------------------
+
+<reporting>
+   <plugins>
+      ....
+      <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-report-plugin</artifactId>
+            <version>2.4.3</version>
+      </plugin>
+      ....
+      <plugin>
+      	<groupId>ch.fortysix</groupId>
+      	<artifactId>maven-postman-plugin</artifactId>
+      	<configuration>
+            <skipMails>false</skipMails>
+            <from>builder@myserver.com</from>
+            <!--<groovyCondition><![CDATA[failures > 0]]></groovyCondition>-->
+            <receivers>
+            	<receiver>dev1</receiver>
+            	<receiver>dundy@youcomp.com</receiver>
+            	<receiver>dev2</receiver>
+            </receivers>
+      	</configuration>
+      	<reportSets>
+            <reportSet>
+            	<id>surfire test mails</id>
+            	<reports>
+                  <report>surefire-mail</report>
+            	</reports>
+            </reportSet>
+      	</reportSets>
+      </plugin>
+      ....
+	</plugins>
+</reporting>
+
+-------------------
+
