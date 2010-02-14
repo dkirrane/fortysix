@@ -30,5 +30,10 @@ Maven Postaman Plugin
   * {{{./taglist-mail.html}Send a notification if a specific token was found in the source}}. (actualy a report)
   
   
+* Repository
 
+ The <<<maven-postman-plugin>>> is available on the maven central repo, therefore you do not have to add any additional repository definition
+ to be able to use it. 
+ 
+ 
 
