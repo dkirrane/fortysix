@@ -3,16 +3,19 @@
  ------
  Dominik Bartholdi
  ------
- 7 November 2009
+ 22 February 2010
  ------
 
 surefire-mail
 
  Send a mail if the testcases fail. This is usefull if you have desided not to have the full build failing if 
  your testcases fail (for any reason, usefull or not...).
+ 
+ The plugin computes the test results from the previous run of the <<<mave-surefire-plugin>>>, thefore the tests should have been executed.
 
- This report collects the needed information from the <<<maven-surefire-report-plugin>>>, this plugin therfore has to
- be executed befor the postman plugin. This can be achieved by defining it in the correct order in your pom.  
+ In order to get a HTML mail, this report collects the html content for the mail from the <<<maven-surefire-report-plugin>>>, this plugin therfore has to
+ be executed befor the postman plugin. This can be achieved by defining it in the correct order in your pom. 
+ If this is not the case, you will only receive a pure text mail.  
 
  The property <<<groovyCondition>>> allows you to redefine the condition to send the mail. e.g. one can define that 
  there must not be more then 20 skipped test cases (skipped > 20). The default condition sends mails if there are any errors. The following variables are available for usage in the condition:
