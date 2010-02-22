@@ -1,7 +1,8 @@
 /**
  * 
  */
-package ch.fortysix.maven.report.surefire
+package ch.fortysix.maven.plugin.postaman.surfire
+
 ;
 
 /**

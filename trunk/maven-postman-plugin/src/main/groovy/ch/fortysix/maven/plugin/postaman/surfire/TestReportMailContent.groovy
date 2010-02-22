@@ -1,20 +1,17 @@
 /**
  * 
  */
-package ch.fortysix.maven.report.surefire
+package ch.fortysix.maven.plugin.postaman.surfire
 
-import org.apache.maven.doxia.sink.Sink;
 
-import ch.fortysix.maven.report.HtmlSnipplet;
-import ch.fortysix.maven.report.SinkSnipplet;
-import ch.fortysix.maven.report.TextSnipplet;
+
 ;
 
 /**
  * @author Domi
  *
  */
-class TestReportMailContent implements HtmlSnipplet, TextSnipplet{
+class TestReportMailContent {
 	
 	def suiteReports = []
 	

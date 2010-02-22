@@ -10,11 +10,50 @@ taglist-mail
 
  Send a mail if the taglist plugin finds some specific tokens.
  
- This report collects the needed information from the <<<taglist-maven-plugin>>>, this plugin therfore has to
- be executed befor the postman plugin. This can be achieved by defining it in the correct order in your pom.  
+ This goal collects the needed information from the <<<taglist-maven-plugin>>> report, therfore it has to
+ be executed after the site report generation. This can be achieved by setting the execution phase of the postman <<<taglist-mail>>> goal to <<<site>>>.  
 
 -------------------
 
+<build>
+      ....
+      <plugin>
+      	<groupId>ch.fortysix</groupId>
+      	<artifactId>maven-postman-plugin</artifactId>
+      	<configuration>
+            <skip>false</skip>
+            <from>builder@myhost.com</from>
+            <failonerror>true</failonerror>
+            <mailhost>mail.dummy.ch</mailhost>
+            <mailuser>XXXXX</mailuser>
+            <mailpassword>XXXXX</mailpassword>
+      	</configuration>
+      	<executions>
+      	  <execution>
+      	    <id>send surefire notification</id>
+      	    <phase>site</phase>
+      	    <goals>
+      	    	<goal>taglist-mail</goal>
+      	    </goals>
+      	    <configuration>
+      	          <subject>Taglist notification</subject>
+                  <tagClasses>
+                  	<tagClass>
+                        <displayName>Todo_Domi</displayName>
+                        <receivers>
+                        	<receiver>domi</receiver>
+                        	<receiver>chief@mycomp.com</receiver>
+                        </receivers>
+                  	</tagClass>
+                  </tagClasses>
+      	    </configuration>
+      	  </execution>
+      	</executions>
+      </plugin>
+      ....
+   </plugins>
+</build>	
+	
 <reporting>
 	<plugins>
       ....
@@ -29,8 +68,8 @@ taglist-mail
                   	<displayName>Todo_Domi</displayName>
                   	<tags>
                         <tag>
-                        	<matchString>todo domi</matchString>
-                        	<matchType>ignoreCase</matchType>
+                          <matchString>todo domi</matchString>
+                          <matchType>ignoreCase</matchType>
                         </tag>
                   	</tags>
                   </tagClass>
@@ -38,36 +77,7 @@ taglist-mail
             </tagListOptions>
       	</configuration>
       </plugin>
-      ....
-      <plugin>
-      	<groupId>ch.fortysix</groupId>
-      	<artifactId>maven-postman-plugin</artifactId>
-      	<configuration>
-            <skipMails>false</skipMails>
-            <from>builder@myserver.com</from>
-      	</configuration>
-      	<reportSets>
-            <reportSet>
-            	<id>taglist mails</id>
-            	<configuration>
-                  <tagClasses>
-                  	<tagClass>
-                        <displayName>Todo_Domi</displayName>
-                        <receivers>
-                        	<receiver>domi</receiver>
-                        	<receiver>chief@mycomp.com</receiver>
-                        </receivers>
-                  	</tagClass>
-                  </tagClasses>
-            	</configuration>
-            	<reports>
-                  <report>taglist-mail</report>
-            	</reports>
-            </reportSet>
-      	</reportSets>
-      </plugin>
-      ....
-	</plugins>
+      ....	
 </reporting>
 
 -------------------

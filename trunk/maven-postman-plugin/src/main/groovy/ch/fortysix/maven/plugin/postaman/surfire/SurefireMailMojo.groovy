@@ -1,4 +1,5 @@
-package ch.fortysix.maven.report.surefire
+package ch.fortysix.maven.plugin.postaman.surfire
+
 
 /**
  * 
@@ -12,10 +13,11 @@ import java.util.List;
 
 import org.apache.maven.doxia.siterenderer.Renderer;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.MavenReportException;
 
-import ch.fortysix.maven.report.AbstractReportMojo;
+import ch.fortysix.maven.plugin.postaman.AbstractSenderMojo;
 import ch.fortysix.maven.report.support.SinkReporter;
 
 
@@ -26,38 +28,8 @@ import ch.fortysix.maven.report.support.SinkReporter;
  * @goal surefire-mail
  * @phase site
  */
-class PostmanSurefireReportMojo extends AbstractReportMojo {
+class SurefireMailMojo extends AbstractSenderMojo {
 	
-	/**
-	 * The postfix used in the email subject 
-	 * @parameter default-value="surfire test notification"
-	 */
-	String subjectPostFix
-	
-	String getSubjectPostFix(){
-		return subjectPostFix
-	}
-	
-	String getNlsPrefix(){
-		"report.postman.surefire."
-	}
-	
-	public String getOutputName() {
-		"postman-surefire-report"
-	}	
-	
-	/**
-	 * Who should receive a mail? One can use an id of a developer registered in the pom or an email address directly.
-	 * <pre>
-	 * 	 		&lt;receivers&gt;	 
-	 * 		  		&lt;receiver&gt;developerId&lt;/receiver&gt;
-	 * 		  		&lt;receiver&gt;sam@topland.com&lt;/receiver&gt;
-	 * 	 		&lt;/receivers&gt;
-	 * </pre>
-	 * @parameter 
-	 * @required
-	 */	
-	Set receivers;	
 	
 	/**
 	 * The file pattern to be used to search for the surefire reports in the 'testReportsDirectory'-directory.
@@ -102,29 +74,29 @@ class PostmanSurefireReportMojo extends AbstractReportMojo {
 	File surefireReportHtml;
 	
 	
-	protected boolean prepareReport(Locale locale){
+	protected boolean prepareMojo(){
 		if(!testReportsDirectory || !testReportsDirectory.exists()){
-			getLog().warn """
-				'testReportsDirectory' could not be found ($testReportsDirectory).
-				Do you have the 'maven-surefire-plugin' configured or are the reports generated to a different directory?
-				"""
+			getLog().error """
+ 'testReportsDirectory' could not be found ($testReportsDirectory).
+ - Do you have the 'maven-surefire-plugin' configured or are the reports generated to a different directory?
+ - Is the 'maven-surefire-plugin' executed befor this plugin?
+"""
 			return false
 		}
 		if(surefireReportHtml && !surefireReportHtml.exists()){
 			getLog().warn """
-			The postman-surefire mails will not contain HTML, because the surefire report could not be found.
-			- 'maven-surefire-report-plugin' must be defined before 'maven-postman-plugin' in the pom!
-			"""
+ The postman-surefire mails will not contain HTML, because the surefire report could not be found.
+ - 'maven-surefire-report-plugin' must run befor 'maven-postman-plugin', set phase to 'site'!
+"""
 		}
 		return true
 	}
 	
-	/**
-	 * create the report
-	 */
-	protected void executePostmanReport(Locale locale, List mailList) throws MavenReportException {
+	public void executeMojo() throws MojoExecutionException, MojoFailureException {
 		
-		def mailContent
+		def mailList = this.collectMails()
+		
+		def mailContent 
 		// as all mails do have the same content, we just take the content of the first to compute test results
 		if(mailList){
 			mailContent = mailList[0]
@@ -170,19 +142,12 @@ class PostmanSurefireReportMojo extends AbstractReportMojo {
 		}
 		boolean sendIt = value as Boolean
 		
-		if(skipMails){
-			log.info "postman skips sending mails!"
-		} else {
-			// we send the same report to all receivers
-			if(sendIt){
-				context.run mailList
-			}else{
-				log.info "postman surfire report groovy condition [$groovyCondition] not fulfilled, don't send the mails..."
-			}
+		// we send the same report to all receivers
+		if(sendIt){
+			context.run mailList
+		}else{
+			log.info "postman surfire report groovy condition [$groovyCondition] not fulfilled, don't send the mails..."
 		}
-		
-		def report = new SinkReporter(bodyGenerator: new SurefireReportBodyGenerator(mailsSkiped: skipMails, mailList: mailList))
-		report.doGenerateReport( getBundle( locale ), getSink(), nlsPrefix, getLog())
 	}
 	
 	

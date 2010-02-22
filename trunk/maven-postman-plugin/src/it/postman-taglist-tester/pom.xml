@@ -47,7 +47,48 @@
 				<configuration>
 					<testFailureIgnore>true</testFailureIgnore>
 				</configuration>
-
+			</plugin>
+			<plugin>
+				<groupId>ch.fortysix</groupId>
+				<artifactId>maven-postman-plugin</artifactId>
+				<version>${postmanPluginVersion}</version>
+				<configuration>
+					<skip>false</skip>
+					<from>${testFromAddress}</from>
+					<subject>a subject</subject>
+					<failonerror>true</failonerror>
+					<mailport>${testSmtpServerPort}</mailport>
+					<mailssl>false</mailssl>
+				</configuration>
+				<executions>
+					<execution>
+						<id>send-taglist mail</id>
+						<phase>site</phase>
+						<goals>
+							<goal>taglist-mail</goal>
+						</goals>
+						<configuration>
+							<tagClasses>
+								<tagClass>
+									<displayName>Todo Work</displayName>
+									<receivers>
+										<receiver>9999</receiver>
+										<receiver>dude@pom.xml</receiver>
+										<receiver>anyone@sink.com</receiver>
+									</receivers>
+								</tagClass>
+								<tagClass>
+									<displayName>RegEx found</displayName>
+									<receivers>
+										<receiver>dude@pom.xml</receiver>
+										<receiver>9999</receiver>
+										<receiver>1111</receiver>
+									</receivers>
+								</tagClass>
+							</tagClasses>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
@@ -93,47 +134,6 @@
 						</tagClasses>
 					</tagListOptions>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>ch.fortysix</groupId>
-				<artifactId>maven-postman-plugin</artifactId>
-				<version>${postmanPluginVersion}</version>
-				<configuration>
-					<skipMails>false</skipMails>
-					<from>${testFromAddress}</from>
-					<subject>a subject</subject>
-					<failonerror>true</failonerror>
-					<mailport>${testSmtpServerPort}</mailport>
-					<mailssl>false</mailssl>
-				</configuration>
-				<reportSets>
-					<reportSet>
-						<id>taglist mails</id>
-						<configuration>
-							<tagClasses>
-								<tagClass>
-									<displayName>Todo Work</displayName>
-									<receivers>
-										<receiver>9999</receiver>
-										<receiver>dude@pom.xml</receiver>
-										<receiver>anyone@sink.com</receiver>
-									</receivers>
-								</tagClass>
-								<tagClass>
-									<displayName>RegEx found</displayName>
-									<receivers>
-										<receiver>dude@pom.xml</receiver>
-										<receiver>9999</receiver>
-										<receiver>1111</receiver>
-									</receivers>
-								</tagClass>
-							</tagClasses>
-						</configuration>
-						<reports>
-							<report>taglist-mail</report>
-						</reports>
-					</reportSet>
-				</reportSets>
 			</plugin>
 		</plugins>
 	</reporting>

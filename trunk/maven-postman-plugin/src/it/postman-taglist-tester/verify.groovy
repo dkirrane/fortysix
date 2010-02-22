@@ -22,11 +22,4 @@ smtpServer.assertEmailArrived(fromAddress, "domi@pom.xml", 1)
 smtpServer.assertEmailArrived(fromAddress, "dude@pom.xml", 2) 
 
 
-// validate the HTML report
-def html = new File(basedir, 'target/site/postman-taglist-report.html')
-assert html.exists()
-def content = html.text
-
-assert content.contains ("Postman Taglist Mail Report")
-
 return true

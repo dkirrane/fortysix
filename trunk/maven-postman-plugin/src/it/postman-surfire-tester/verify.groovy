@@ -21,11 +21,4 @@ smtpServer.assertEmailArrived(fromAddress, "dundy@pom.xml", 1)
 smtpServer.assertEmailArrived(fromAddress, "samy@pom.xml", 1) 
 
 
-// validate the HTML report
-def html = new File(basedir, 'target/site/postman-surefire-report.html')
-assert html.exists()
-def content = html.text
-
-assert content.contains ("Postman Surefire Mail Report")
-
 return true

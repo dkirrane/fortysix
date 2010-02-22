@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ch.fortysix.maven.plugin.sender;
+package ch.fortysix.maven.plugin.postaman;
 
 import java.util.List;
 
@@ -27,12 +27,18 @@ class MailSenderMojo extends AbstractSenderMojo {
 	 */
 	private List fileSets
 	
-	private MailSenderContext context 
+	/**
+	 * nothing to prepare
+	 */
+	protected boolean prepareMojo(){
+		true
+	}
+	
 	
 	/* (non-Javadoc)
 	 * @see org.apache.maven.plugin.Mojo#execute()
 	 */
-	public void execute() throws MojoExecutionException, MojoFailureException {
+	public void executeMojo() throws MojoExecutionException, MojoFailureException {
 		// create a mailsender
 		MailSender mailSender = new MailSender(
 		mailcontenttype: mailcontenttype,
@@ -51,7 +57,6 @@ class MailSenderMojo extends AbstractSenderMojo {
 				session: session, 
 				project: project,
 				log: log, 
-				skipMails: skipMails,
 				multipartSupported: multipartSupported,
 				mailSender: mailSender,
 				)
