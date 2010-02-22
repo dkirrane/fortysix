@@ -6,20 +6,38 @@ import java.util.Map;
 
 import org.apache.maven.plugin.logging.Log;
 
+import ch.fortysix.maven.report.support.HtmlExtractor;
+
 class SurefireMailCollector {
 	
 	String reportFilePattern
 	
+	File surefireReportHtml
+	
 	Log log;
+	
+	HtmlExtractor htmlExtractor = new HtmlExtractor()
 	
 	TestReportMailContent getSingleMail(File reportDir){
 		
 		def mailContent
-		if(reportDir != null){
+		
+		if(reportDir && reportDir.exists()){
 			
-			log.info("postman: prepare surefire mail...")
+			def html
+			if(surefireReportHtml && surefireReportHtml.exists()){
+				// get the html of the generated surefire report (maven-surefire-report-plugin)
+				if(surefireReportHtml.text){
+					html = htmlExtractor.extractHTMLTagById(html: surefireReportHtml.text, tagName: "div", tagId: "bodyColumn")
+				}
+				
+			} else{
+				log.warn "can't include HTML report to postman-surefire mail ($surefireReportHtml not found)"
+			}
 			
-			mailContent = new TestReportMailContent() 
+			log.info("analyze: surefire reports...")
+			
+			mailContent = new TestReportMailContent(htmlFragment: html) 
 			reportDir.eachFileMatch( ~reportFilePattern ) { reportFile -> 
 				log.debug "-->$reportFile" 
 				def xmlText = reportFile?.text
@@ -34,9 +52,9 @@ class SurefireMailCollector {
 				mailContent.suiteReports << suiteReport
 			}
 			
-			return mailContent
-			
 		}
+		
+		return mailContent
 		
 	}
 	

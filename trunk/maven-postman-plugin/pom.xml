@@ -27,6 +27,10 @@
 		<developerConnection>scm:svn:https://fortysix.googlecode.com/svn/trunk/maven-postman-plugin</developerConnection>
 		<url>http://fortysix.googlecode.com/svn/trunk/maven-postman-plugin</url>
 	</scm>
+	<issueManagement>
+		<system>Google Issue</system>
+		<url>http://code.google.com/p/fortysix/issues/list</url>
+	</issueManagement>
 	<developers>
 		<developer>
 			<id>domi</id>
@@ -319,6 +323,20 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.easyb</groupId>
+				<artifactId>maven-easyb-plugin</artifactId>
+				<version>0.9.6</version>
+				<executions>
+					<execution>
+						<id>run stories</id>
+						<phase>test</phase>
+						<goals>
+							<goal>test</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 		<extensions>
 			<extension>
@@ -429,6 +447,7 @@
 							<report>project-team</report>
 							<report>license</report>
 							<report>scm</report>
+							<report>summary</report>
 							<!--<report>dependencies</report>-->
 						</reports>
 					</reportSet>

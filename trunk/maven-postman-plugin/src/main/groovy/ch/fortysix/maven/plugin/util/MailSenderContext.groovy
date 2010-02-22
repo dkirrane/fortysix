@@ -37,9 +37,19 @@ class MailSenderContext {
 	MailSender mailSender
 	
 	/**
+	 * is able to resolve the email for a given developerId in the pom.xml (maven project)
+	 */
+	def mailAddressResolver	
+	
+	//	/**
+	//	 * the local the mails should be send with
+	//	 */
+	//	def local
+	
+	/**
 	 * do the report and send the mails
 	 */
-	protected void run(Object callback) throws Exception {
+	protected void run(List mailList) throws Exception {
 		
 		def cl
 		if(!skipMails){
@@ -85,11 +95,12 @@ class MailSenderContext {
 			
 		}
 		
-		
+		// create a resolver to enable mail address resolution
+		mailAddressResolver = new AddressResolver(mavenProject: project, log: log)
 		
 		try{
-			// execute the callback
-			callback.executeInternal()
+			
+			mailList?.each sendReport
 			
 		} finally {
 			
@@ -102,11 +113,10 @@ class MailSenderContext {
 		
 	}
 	
-	
 	/**
 	 * Sends one mail
 	 */
-	public def sendReport = { mailContent ->
+	private def sendReport = { mailContent ->
 		assert mailContent.receivers
 		assert mailContent.subject
 		assert mailContent.from
@@ -114,26 +124,15 @@ class MailSenderContext {
 		def resolvedReceivers = []
 		
 		mailContent.receivers.each { receiver ->
-			if(!receiver.contains("@")){
-				def email = project.developers?.find {  
-					it.id == receiver
-				}?.email
-				if(email){
-					getLog().info "replace [$receiver] by [$email]"
-					receiver = email
-				}else{
-					getLog().warn "not able to find email address for [$receiver]"
-					// exit the closure
-					return
-				}
+			def mailAddress = mailAddressResolver.resolveEMailAddress(receiver)
+			if(mailAddress && mailAddress.contains('@')){
+				resolvedReceivers << mailAddress
 			}
-			getLog().info "send mail to: $receiver"
-			resolvedReceivers << receiver
 		}
 		
 		
-		def txt = mailContent.text ? mailContent.text : "No text content defined"
-		def html = mailContent.html ? mailContent.html : "<body>No html content defined</body>"
+		def txt = mailContent.text ? mailContent.text : "No content defined"
+		def html = mailContent.html ? mailContent.html : txt
 		
 		mailSender.sendMail(from: mailContent.from, 
 		subject: mailContent.subject, 
