@@ -17,6 +17,8 @@ import org.apache.maven.reporting.MavenReportException;
 
 import com.sun.activation.registries.LogSupport;
 
+import ch.fortysix.maven.plugin.util.AddressResolver;
+import ch.fortysix.maven.plugin.util.MailSenderContext;
 import ch.fortysix.maven.report.support.MailSender;
 
 /**
@@ -145,6 +147,18 @@ abstract class AbstractReportMojo extends AbstractMavenReport {
 	def mailSender
 	
 	/**
+	 * is able to resolve the email for a given developerId in the pom.xml (maven project)
+	 */
+	def mailAddressResolver
+	
+	protected MailSenderContext context 
+	
+	/**
+	 * The list of mails send/processed by the report. This one gets filled during <code>#executePostmanReport()</code>
+	 */
+	def mailList = []
+	
+	/**
 	 * prefix within the bundle files - has to be overwritten by implementors!
 	 */
 	abstract String getNlsPrefix()
@@ -185,117 +199,78 @@ abstract class AbstractReportMojo extends AbstractMavenReport {
 	/**
 	 * Sends one mail
 	 */
-	def sendReport = { receiver, mailContent ->
-		
-		if(!receiver.contains("@")){
-			def email = project.developers?.find {  
-				it.id == receiver
-			}?.email
-			if(email){
-				getLog().info "replace [$receiver] by [$email]"
-				receiver = email
-			}else{
-				getLog().warn "not able to find email for [$receiver]"
-				// exit the closure
-				return
-			}
-		}
-		getLog().info "send mail to: $receiver"
-		
-		def tos = [receiver]
-		def newSubject = subject + " " + getSubjectPostFix()
-		
-		mailSender.sendMail(from: from, 
-		subject: newSubject, 
-		txtmessage: mailContent.text(),
-		htmlmessage: mailContent.html(),
-		receivers: tos)
-	}	
+	//	def sendReport = { receiver, mailContent ->
+	//		
+	//		def mailAddress = mailAddressResolver.resolveEMailAddress(receiver)
+	//		
+	//		getLog().info "send mail to: $mailAddress"
+	//		
+	//		def tos = [mailAddress]
+	//		def newSubject = subject + " " + getSubjectPostFix()
+	//		
+	//		mailSender.sendMail(from: from, 
+	//		subject: newSubject, 
+	//		txtmessage: mailContent.text(),
+	//		htmlmessage: mailContent.html(),
+	//		receivers: tos)
+	//	}	
 	
 	/**
 	 * do the report and send the mails
 	 */
 	protected void executeReport(Locale locale) throws MavenReportException {
 		
-		if(!sourceEncoding){
-			sourceEncoding = session.getExecutionProperties()."file.encoding"
-			getLog().warn "Using platform sourceEncoding ($sourceEncoding actually) to copy filtered resources, i.e. build is platform dependent!"
+		if(!this.prepareReport (locale)){
+			getLog().warn "not able to create report"
+			return
 		}
 		
-		def cl
-		if(!skipMails){
-			// Since the javax.activation.* implementation/distribution is included in the JRE since java6,
-			// we some times discovered problems with loading the correct mail mimetypes from the 'mailcap's file.
-			// As the project has dependencies to the mail.jar and the activation.jar we know a correct implementation
-			// is on the classpath and we can force the loading from it if we tweak the classloader hierarchy 
-			// Check if the correct mimetypes could have been loaded from the activation.jar
-			if(multipartSupported){
-				
-				def java = session.getExecutionProperties()."file.encoding"
-				// save the classloader for later restoring 
-				cl = Thread.currentThread().getContextClassLoader()
-				// set the classloader of the current class as the classlaoder of the current thread
-				// this has to be done every time, otherwise only the first plugin execution (in a reportSet) will work! 
-				Thread.currentThread().setContextClassLoader( getClass().getClassLoader() )	
-				
-				def mimeToCheck = "multipart/mixed"
-				// the user wants to try to send multipart messages
-				MailcapCommandMap mc = (MailcapCommandMap)CommandMap.getDefaultCommandMap();
-				
-				if(getLog().isDebugEnabled()){
-					mc.getMimeTypes().each{ getLog().debug "Original  MIME-TYPE: $it" }
-				}
-				
-				if(!mc.getAllCommands (mimeToCheck)){
-					getLog().debug "Mail MimeType not registred, tweaking classloader..."
-					CommandMap.setDefaultCommandMap(new MailcapCommandMap());
-					MailcapCommandMap newMc = (MailcapCommandMap)CommandMap.getDefaultCommandMap();
-					
-					if(getLog().isDebugEnabled()){
-						newMc.getMimeTypes().each{ getLog().debug "new MIME-TYPE: $it" }
-					}
-					
-					if(!newMc.getAllCommands (mimeToCheck)){
-						multipartSupported = false
-						getLog().warn "not able to load MimeType 'multipart/mixed', can only send 'text/*' mails"
-					}
-				} 
-			}
-			
-			// create a mailsender
-			mailSender = new MailSender(
-					mailcontenttype: mailcontenttype,
-					multipartSupported: multipartSupported,
-					mailAltConfig: mailAltConfig,
-					log: getLog(),
-					failonerror: failonerror,
-					ssl: mailssl,
-					user: mailuser,
-					password: mailpassword,
-					mailhost: mailhost, 
-					mailport: mailport)		
-			mailSender.init()		
-		}
+		// create a mailsender
+		mailSender = new MailSender(
+				mailcontenttype: mailcontenttype,
+				multipartSupported: multipartSupported,
+				mailAltConfig: mailAltConfig,
+				log: getLog(),
+				failonerror: failonerror,
+				ssl: mailssl,
+				user: mailuser,
+				password: mailpassword,
+				mailhost: mailhost, 
+				mailport: mailport)		
+		mailSender.init()
 		
-		try{
-			// execute the report
-			executePostmanReport(locale)
-			
-		} finally {
-			
-			if(cl){
-				getLog().debug "restore 'original' classlaoder"
-				Thread.currentThread().setContextClassLoader( cl )
-			}
-			
-		}
+		context = new MailSenderContext(
+				session: session, 
+				project: project,
+				log: log, 
+				skipMails: skipMails,
+				multipartSupported: multipartSupported,
+				mailSender: mailSender,
+				)
+		
+		
+		def mailList = this.collectMails()
+		this.executePostmanReport locale, mailList
 		
 	}
 	
 	/**
-	 * To be implemented by subclasses
+	 * Prepares and/or checks the preconditions for the report 
+	 * @return
 	 */
-	protected abstract void executePostmanReport(Locale locale) throws MavenReportException;
+	protected abstract boolean prepareReport(Locale locale)
+	
+	/**
+	 * Collects the mails and returns them for further processing in the report 
+	 * @return a list of mails to be send
+	 */
+	protected abstract List collectMails()
+	
+	/**
+	 * To be implemented by subclasses. Should also fill the list
+	 * 
+	 */
+	protected abstract void executePostmanReport(Locale locale, List mailList) throws MavenReportException;
 	
 	/**
 	 * returns the postfix for the mail subject

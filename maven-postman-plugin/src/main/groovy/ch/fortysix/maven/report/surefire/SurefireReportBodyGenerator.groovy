@@ -11,9 +11,19 @@ import org.apache.maven.doxia.sink.Sink;
  */
 class SurefireReportBodyGenerator {
 	
-	def receiver2TestReport
+	boolean mailsSkiped = false
+	
+	//[receivers: receivers, from: from, subject: subject, text: mailContent.text(), html: mailContent.html()]
+	def mailList
 	
 	void generateBody(Sink sink){
+		if(mailsSkiped){
+			sink.paragraph()
+			sink.bold()
+			sink.text "The mail sending has been skiped! (no mails send)"
+			sink.bold_()
+			sink.paragraph_()
+		}
 		sink.paragraph()
 		sink.text "The reminder mail check the test results was send to this users."
 		sink.table()
@@ -24,13 +34,13 @@ class SurefireReportBodyGenerator {
 		//		sink.text "Mail Content"
 		//		sink.tableHeaderCell_()
 		
-		receiver2TestReport.each { receiver, report ->
+		mailList.each { mail -> 
 			sink.tableRow()
 			sink.tableCell()
-			sink.text receiver
+			sink.text mail.receiver
 			sink.tableCell_()
 			sink.tableCell()
-			sink.text receiver
+			sink.text mail.text
 			sink.tableCell_()
 			sink.tableRow_()
 		}

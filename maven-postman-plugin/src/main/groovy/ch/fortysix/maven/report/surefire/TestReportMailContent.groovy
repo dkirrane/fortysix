@@ -28,7 +28,7 @@ class TestReportMailContent implements HtmlSnipplet, TextSnipplet{
 		def body = new StringBuilder()
 		suiteReports.each{ report -> 
 			body << "\n"
-			body << report.name << "\n"
+			body << report.name << " (total: " << report.tests <<  ") errors: " << report.errors <<  ", failures: " <<  report.failures << ", skipped: " <<  report.skipped
 		}
 		body.toString()
 	}

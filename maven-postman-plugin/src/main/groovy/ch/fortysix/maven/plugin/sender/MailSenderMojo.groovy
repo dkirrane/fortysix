@@ -57,11 +57,13 @@ class MailSenderMojo extends AbstractSenderMojo {
 				)
 		
 		
-		context.run this
+		
+		def mails = this.collectMails()
+		context.run mails
 	}
 	
 	
-	public void executeInternal(){
+	public List collectMails(){
 		def filesToAttach = []
 		if(fileSets){
 			FileSetManager fileSetManager = new FileSetManager(getLog())
@@ -82,10 +84,7 @@ class MailSenderMojo extends AbstractSenderMojo {
 		def htmlBody = htmlMessageFile?.text ? htmlMessageFile?.text : htmlMessage
 		def txtBody =  textMessageFile?.text ? textMessageFile?.text : textMessage
 		
-		def mail = [receivers: receivers, from: from, subject: subject, text: txtBody, html: htmlBody, attachments: filesToAttach]
-		
-		def mails = [mail]
-		mails.each context.sendReport 
+		return [[receivers: receivers, from: from, subject: subject, text: txtBody, html: htmlBody, attachments: filesToAttach]]
 	}
 	
 	

@@ -91,27 +91,48 @@ class PostmanTaglistReportMojo extends AbstractReportMojo {
 	 */		
 	List tagClasses = []
 	
+	/**
+	 * The mapping from a tagclass to an anchor
+	 */
+	Map tagClass2Anchor
+	
 	void addTagClasse(TagClass tagClass){
 		tagClasses.add(tagClass)
 	}	
 	
-	/**
-	 * do the report and send the mails
-	 */
-	protected void executePostmanReport(Locale locale) throws MavenReportException {
-		def tagClass2Ancher = prepareAnchers()
-		
+	
+	protected boolean prepareReport(Locale locale){
+		tagClass2Anchor = prepareAnchers()
+		if(tagClass2Anchor == null){
+			return false
+		}
+		return true
+	}
+	
+	public List collectMails(){
 		TaglistMailCollector taglistSender = new TaglistMailCollector(log: getLog(), tagClasses: tagClasses)
 		def receiver2Mail = taglistSender.getMails(taglistReportXml, taglistReportHtml)
 		
+		def mails = []
+		receiver2Mail.each{ receiver, mailContent ->
+			mails << [receivers: [receiver], from: from, subject: subject, text: mailContent.text(), html: mailContent.html(), tagsFromReportFile: mailContent.tagsFromReportFile]			
+		}		
+		return mails
+	}
+	
+	/**
+	 * do the report and send the mails
+	 */
+	protected void executePostmanReport(Locale locale, List mailList) throws MavenReportException {
+		
 		if(!skipMails){
-			receiver2Mail.each sendReport
+			context.run mailList
 		} else{
 			log.info "postman skips sending mails!"
 		}
 		
-		def report = new SinkReporter(bodyGenerator: new TaglistReportBodyGenerator(receiver2TestReport: receiver2Mail, 
-				tagClass2Ancher: tagClass2Ancher,
+		def report = new SinkReporter(bodyGenerator: new TaglistReportBodyGenerator(receiver2TestReport: mailList, 
+				tagClass2Anchor: tagClass2Anchor,
 				targetTaglistHtmlPage: taglistReportHtml?.getName()))
 		report.doGenerateReport( getBundle( locale ), getSink(), nlsPrefix, getLog() )
 	}
@@ -120,8 +141,9 @@ class PostmanTaglistReportMojo extends AbstractReportMojo {
 	 * Parses the <code>taglist.html</code> and prepares a map with the mapping 'tagClass.displayName:htmlAncher'.
 	 */
 	Map prepareAnchers(){
-		def tagClass2htmlAncher = [:]
+		def tagClass2htmlAnchor 
 		if(taglistReportHtml && taglistReportHtml.exists()){
+			tagClass2htmlAnchor = [:]
 			// 1. parse the html
 			def doc = new XmlParser( new org.cyberneko.html.parsers.SAXParser() ).parse(taglistReportHtml)
 			// 2. get all <a>-tags starting with '#' (anchers) 
@@ -130,10 +152,10 @@ class PostmanTaglistReportMojo extends AbstractReportMojo {
 			}.each{
 				// 3. fill them in to the prepared map
 				// each item is still a XML/XHTML Snipplet!
-				tagClass2htmlAncher.put it.text(), it['@href']	
+				tagClass2htmlAnchor.put it.text(), it['@href']	
 			}
 			if(getLog().isDebugEnabled()){
-				tagClass2htmlAncher.each{  key, value -> getLog().debug "$key === $value" }
+				tagClass2htmlAnchor.each{  key, value -> getLog().debug "$key === $value" }
 			}
 		}else{
 			getLog().warn """
@@ -145,7 +167,7 @@ class PostmanTaglistReportMojo extends AbstractReportMojo {
 			   if it can't find any java code.			
 			"""
 		}
-		return tagClass2htmlAncher
+		return tagClass2htmlAnchor
 	}
 	
 }
