@@ -1,17 +1,14 @@
-package ch.fortysix.maven.report.taglist
+package ch.fortysix.maven.plugin.postman.taglist
+
 ;
 
 import java.util.Iterator;
 
 import org.apache.maven.doxia.sink.Sink;
 
-import ch.fortysix.maven.report.HtmlSnipplet;
-import ch.fortysix.maven.report.SinkSnipplet;
-import ch.fortysix.maven.report.TextSnipplet;
-
 import com.sun.mail.imap.protocol.BODY;
 
-class TagClassMailContent implements HtmlSnipplet, TextSnipplet, SinkSnipplet{
+class TagClassMailContent {
 	def tagsFromReportFile = []
 	
 	def htmlFragment

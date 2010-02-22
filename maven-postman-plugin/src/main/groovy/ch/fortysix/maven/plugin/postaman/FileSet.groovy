@@ -1,4 +1,4 @@
-package ch.fortysix.maven.plugin.sender
+package ch.fortysix.maven.plugin.postaman
 
 
 /**

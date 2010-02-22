@@ -37,7 +37,7 @@
 						</goals>
 						<inherited>false</inherited>
 						<configuration>
-							<skipMails>false</skipMails>
+							<skip>false</skip>
 							<from>${testFromAddress}</from>
 							<subject>a subject</subject>
 							<failonerror>true</failonerror>

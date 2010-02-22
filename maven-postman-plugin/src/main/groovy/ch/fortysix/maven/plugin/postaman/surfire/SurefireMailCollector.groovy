@@ -1,8 +1,8 @@
-package ch.fortysix.maven.report.surefire
+package ch.fortysix.maven.plugin.postaman.surfire
+
 ;
 
 import java.io.File;
-import java.util.Map;
 
 import org.apache.maven.plugin.logging.Log;
 

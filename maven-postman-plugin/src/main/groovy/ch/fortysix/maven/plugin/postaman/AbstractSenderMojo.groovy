@@ -1,4 +1,4 @@
-package ch.fortysix.maven.plugin.sender;
+package ch.fortysix.maven.plugin.postaman;
 
 import java.io.File;
 import java.util.Set;
@@ -6,6 +6,9 @@ import java.util.Set;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.gmaven.mojo.GroovyMojo;
+
+import ch.fortysix.maven.plugin.util.MailSenderContext;
+import ch.fortysix.maven.report.support.MailSender;
 
 abstract class AbstractSenderMojo extends GroovyMojo {
 	
@@ -27,7 +30,7 @@ abstract class AbstractSenderMojo extends GroovyMojo {
 	 * Indicates whether this report should skip the sending mails (no mails send).
 	 * @parameter  default-value="false"
 	 */
-	boolean skipMails	= false
+	boolean skip = false
 	
 	/**
 	 * @parameter expression="${project}"
@@ -158,6 +161,59 @@ abstract class AbstractSenderMojo extends GroovyMojo {
 	 */	
 	File htmlMessageFile
 	
+	protected MailSenderContext context 
+	
+	/* (non-Javadoc)
+	 * @see org.apache.maven.plugin.Mojo#execute()
+	 */
+	public void execute() throws MojoExecutionException, MojoFailureException {
+		
+		if(skip){
+			log.warn "postman skips sending mails!"
+			return
+		}
+		
+		if(!this.prepareMojo()){
+			// stop MOJO execution
+			return 
+		}
+		
+		// create a mailsender
+		MailSender mailSender = new MailSender(
+				mailcontenttype: mailcontenttype,
+				multipartSupported: multipartSupported,
+				mailAltConfig: mailAltConfig,
+				log: getLog(),
+				failonerror: failonerror,
+				ssl: mailssl,
+				user: mailuser,
+				password: mailpassword,
+				mailhost: mailhost, 
+				mailport: mailport)				
+		
+		
+		context = new MailSenderContext(
+				session: session, 
+				project: project,
+				log: log, 
+				multipartSupported: multipartSupported,
+				mailSender: mailSender,
+				)
+		
+		
+		this.executeMojo()
+		
+	}
+	
+	/**
+	 * prepare the mojo and tell whether the execution should be triggered or not 
+	 */
+	protected abstract boolean prepareMojo()
+	
+	/**
+	 * Execute the mojo
+	 */
+	protected abstract void executeMojo() throws MojoExecutionException, MojoFailureException 
 	
 	
 }
