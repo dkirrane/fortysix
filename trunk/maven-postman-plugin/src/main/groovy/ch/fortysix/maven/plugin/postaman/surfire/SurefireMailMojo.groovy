@@ -18,6 +18,7 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.MavenReportException;
 
 import ch.fortysix.maven.plugin.postaman.AbstractSenderMojo;
+import ch.fortysix.maven.report.support.HtmlExtractor;
 import ch.fortysix.maven.report.support.SinkReporter;
 
 
@@ -94,32 +95,28 @@ class SurefireMailMojo extends AbstractSenderMojo {
 	
 	public void executeMojo() throws MojoExecutionException, MojoFailureException {
 		
-		def mailList = this.collectMails()
-		
-		def mailContent 
-		// as all mails do have the same content, we just take the content of the first to compute test results
-		if(mailList){
-			mailContent = mailList[0]
-		}
+		// Analyze the test reports
+		TestReportUtil util = new TestReportUtil(log: getLog())
+		def suiteReports = util.getTestSuiteReport( testReportsDirectory, reportFilePattern)
 		
 		////////////////////////////////////////////////////
 		//
 		// evaluate if the condition tells us to send the mails
 		
 		// - prepare variables
-		def errors = mailContent?.suiteReports.inject(0) { count, suiteReport ->
+		def errors = suiteReports.inject(0) { count, suiteReport ->
 			count + suiteReport?.errors
 		}
 		log.debug "test ERRORS: "+ errors
-		def skipped = mailContent?.suiteReports.inject(0) { count, suiteReport ->
+		def skipped = suiteReports.inject(0) { count, suiteReport ->
 			count + suiteReport?.skipped
 		}
 		log.debug "test SKIPPED: "+ skipped
-		def failures = mailContent?.suiteReports.inject(0) { count, suiteReport ->
+		def failures = suiteReports.inject(0) { count, suiteReport ->
 			count + suiteReport?.failures
 		}
 		log.debug "test FAILURES: "+ failures
-		def tests = mailContent?.suiteReports.inject(0) { count, suiteReport ->
+		def tests = suiteReports.inject(0) { count, suiteReport ->
 			count + suiteReport?.tests
 		}
 		log.debug "test TOTAL: "+ tests
@@ -144,7 +141,8 @@ class SurefireMailMojo extends AbstractSenderMojo {
 		
 		// we send the same report to all receivers
 		if(sendIt){
-			context.run mailList
+			def mail = this.createMail(suiteReports)
+			context.run ([mail])
 		}else{
 			log.info "postman surfire report groovy condition [$groovyCondition] not fulfilled, don't send the mails..."
 		}
@@ -152,13 +150,44 @@ class SurefireMailMojo extends AbstractSenderMojo {
 	
 	
 	/**
-	 * collect the mails to be send/reported
+	 * create the mail to be send/reported. 
 	 */
-	public List collectMails(){
-		SurefireMailCollector testReportSender = new SurefireMailCollector(log: getLog(), reportFilePattern: reportFilePattern, surefireReportHtml: surefireReportHtml)
-		def mailContent = testReportSender.getSingleMail(testReportsDirectory)
+	public Map createMail(List suiteReports){
 		
-		return [[receivers: receivers, from: from, subject: subject, text: mailContent.text(), html: mailContent.html(), suiteReports: mailContent.suiteReports]]
+		def html = htmlMessageFile?.text
+		html = html ? html : htmlMessage
+		def txt = textMessageFile?.text
+		txt = txt ? txt : textMessage
+		
+		if(!html){
+			// if no html was configured in the plugin, we try to use the html report
+			if(surefireReportHtml && surefireReportHtml.exists()){
+				// get the html of the generated surefire report (maven-surefire-report-plugin)
+				if(surefireReportHtml.text){
+					HtmlExtractor htmlExtractor = new HtmlExtractor()
+					html = htmlExtractor.extractHTMLTagById(html: surefireReportHtml.text, tagName: "div", tagId: "bodyColumn")
+				}
+				
+			} else{
+				log.warn "can't include HTML report to postman-surefire mail ($surefireReportHtml not found)"
+			}
+		}
+		
+		if(!txt){
+			// if no text was configured in the plugin, we create a basic report our self
+			def body = new StringBuilder()
+			suiteReports.each{ report -> 
+				body << "\n"
+				body << report.name << " (total: " << report.tests <<  ") errors: " << report.errors <<  ", failures: " <<  report.failures << ", skipped: " <<  report.skipped
+			}
+			txt = body.toString()
+		}
+		
+		if(!html){
+			html = txt
+		}
+		
+		return [receivers: receivers, from: from, subject: subject, text: txt, html: html]
 	}
 	
 }
