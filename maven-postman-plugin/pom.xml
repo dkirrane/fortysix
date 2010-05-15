@@ -1,11 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ch.fortysix</groupId>
 	<artifactId>maven-postman-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
 	<name>Postman mail plugin</name>
-	<version>0.1.6-SNAPSHOT</version>
+	<version>0.1.5-SNAPSHOT</version>
 	<inceptionYear>2009</inceptionYear>
 	<description>Enables sending of mails in a build. The purpose of the plugin is to support conditional emailing (e.g. send an email if a file contains a certain string, the tests failed or just to send a notification or an artifact via mail) </description>
 	<url>http://doc.fortysix.ch/maven/maven-postman-plugin</url>
@@ -366,10 +365,7 @@
 							<pomIncludes>
 								<pomInclude>*/pom.xml</pomInclude>
 							</pomIncludes>
-							<!--
-								this will speed up the build, it tells Maven to use the local
-								repository as a remote repository
-							-->
+							<!-- this will speed up the build, it tells Maven to use the local repository as a remote repository -->
 							<settingsFile>src/it/settings.xml</settingsFile>
 							<localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
 							<preBuildHookScript>setup.groovy</preBuildHookScript>
@@ -379,10 +375,7 @@
 								<goal>clean</goal>
 								<goal>site</goal>
 							</goals>
-							<!--
-								as the criterion goal is disabled, we explicitly call all other
-								test projects
-							-->
+							<!-- as the criterion goal is disabled, we explicitly call all other test projects -->
 							<invokerTest>postman-filesender-tester,postman-surfire-tester,postman-taglist-tester</invokerTest>
 						</configuration>
 						<executions>
