@@ -6,6 +6,10 @@
   <packaging>pom</packaging>
   <name>TestProject Parent Module</name>
   <description>Used to verify the build capabilities</description>
+  <scm>
+  	<connection>scm:svn:http://fortysix.googlecode.com/svn/trunk/TPParent</connection>
+  	<developerConnection>scm:svn:https://fortysix.googlecode.com/svn/trunk/TPParent</developerConnection>
+  </scm>
   <modules>
   	<module>../TPModule1</module>
   	<module>../TPModule2</module>

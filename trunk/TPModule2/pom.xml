@@ -14,6 +14,10 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
+  <scm>
+  	<connection>scm:svn:http://fortysix.googlecode.com/svn/trunk/TPModule2</connection>
+  	<developerConnection>scm:svn:https://fortysix.googlecode.com/svn/trunk/TPModule2</developerConnection>
+  </scm>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
