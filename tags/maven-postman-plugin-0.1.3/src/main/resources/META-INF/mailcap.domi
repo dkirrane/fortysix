@@ -1,0 +1,12 @@
+# Comments begin with a '#' and continue to the end of the line.
+<mime type>; ; <parameter list>
+# Where a parameter list consists of one or more parameters,
+# where parameters look like: x-java-view=com.sun.TextViewer
+# and a parameter list looks like:
+text/plain; ; x-java-view=com.sun.TextViewer; x-java-edit=com.sun.TextEdit
+text/html; ; x-java-content-handler=com.sun.mail.handlers.text_html
+text/xml; ; x-java-content-handler=com.sun.mail.handlers.text_xml
+text/plain; ; x-java-content-handler=com.sun.mail.handlers.text_plain
+multipart/*; ; x-java-content-handler=com.sun.mail.handlers.multipart_mixed
+multipart/mixed; ; x-java-content-handler=com.sun.mail.handlers.multipart_mixed
+message/rfc822; ; x-java-content-handler=com.sun.mail.handlers.message_rfc822
