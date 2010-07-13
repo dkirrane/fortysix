@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>TPParent</artifactId>
 		<groupId>ch.fortysix.tp</groupId>
-		<version>0.0.2</version>
+		<version>0.0.3-SNAPSHOT</version>
 		<relativePath>../TPParent</relativePath>
 	</parent>
 	
@@ -20,8 +20,8 @@
 	</properties>
 
 	<scm>
-		<connection>scm:svn:http://fortysix.googlecode.com/svn/tags/TPParent-0.0.2/TPModule1</connection>
-		<developerConnection>scm:svn:https://fortysix.googlecode.com/svn/tags/TPParent-0.0.2/TPModule1</developerConnection>
+		<connection>scm:svn:http://fortysix.googlecode.com/svn/trunk/TPModule1</connection>
+		<developerConnection>scm:svn:https://fortysix.googlecode.com/svn/trunk/TPModule1</developerConnection>
 	</scm>
 	<distributionManagement>
 		<repository>
