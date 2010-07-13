@@ -1,0 +1,11 @@
+<document>
+	<properties>
+		<title>changes on postman </title>
+		<author email="domi[@]fortysix.ch">domi</author>
+	</properties>
+	<body>
+		<release version="0.0.1-SNAPSHOT" date="7.11.2009" description="first go">
+			<action dev="domi" type="new">FileContainsVoter, this voter is able to check if file contains given pattern.</action>
+		</release>
+	</body>
+</document>

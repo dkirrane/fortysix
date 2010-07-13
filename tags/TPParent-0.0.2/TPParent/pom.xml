@@ -1,0 +1,42 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>ch.fortysix.tp</groupId>
+	<artifactId>TPParent</artifactId>
+	<version>0.0.2</version>
+	<packaging>pom</packaging>
+	<name>TestProject Parent Module</name>
+	<description>Used to verify the build capabilities</description>
+	<scm>
+		<connection>scm:svn:http://fortysix.googlecode.com/svn/tags/TPParent-0.0.2/TPParent</connection>
+		<developerConnection>scm:svn:https://fortysix.googlecode.com/svn/tags/TPParent-0.0.2/TPParent</developerConnection>
+	</scm>
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.0</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+	<distributionManagement>
+		<repository>
+			<id>nexus-rel</id>
+			<name>Nexus Release Repo</name>
+			<url>http://192.168.1.40:8081/nexus/content/repositories/releases</url>
+		</repository>
+		<snapshotRepository>
+			<uniqueVersion>true</uniqueVersion>
+			<id>nexus-snap</id>
+			<name>Nexus Snapshot Repo</name>
+			<url>http://192.168.1.40:8081/nexus/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<modules>
+		<module>../TPModule1</module>
+		<module>../TPModule2</module>
+	</modules>
+</project>
