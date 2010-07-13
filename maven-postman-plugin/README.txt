@@ -36,6 +36,8 @@ Run integration tests:
 ======================
 $> mvn clean integration-test -Dit
 
+====> use nexus!!!!
+
 
 
 
