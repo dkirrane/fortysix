@@ -2,13 +2,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ch.fortysix.tp</groupId>
 	<artifactId>TPParent</artifactId>
-	<version>0.0.6-7</version>
+	<version>0.0.7-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>TestProject Parent Module</name>
 	<description>Used to verify the build capabilities</description>
 	<scm>
-		<connection>scm:svn:http://fortysix.googlecode.com/svn/tags/TPParent-0.0.6-7/TPParent</connection>
-		<developerConnection>scm:svn:https://fortysix.googlecode.com/svn/tags/TPParent-0.0.6-7/TPParent</developerConnection>
+		<connection>scm:svn:http://fortysix.googlecode.com/svn/trunk/TPParent</connection>
+		<developerConnection>scm:svn:https://fortysix.googlecode.com/svn/trunk/TPParent</developerConnection>
 	</scm>
 	<distributionManagement>
 		<repository>
