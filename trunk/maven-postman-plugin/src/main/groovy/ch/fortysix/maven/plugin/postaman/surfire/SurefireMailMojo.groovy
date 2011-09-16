@@ -50,7 +50,7 @@ class SurefireMailMojo extends AbstractSenderMojo {
 	 * 	<li><code>failures</code>: number of all failures in the test cases</li>
 	 * 	<li><code>total</code>: number of all test cases</li>
 	 * </ul>
-	 * Other (usefull or not...) examples:
+	 * Other (useful or not...) examples:
 	 * <ul>
 	 * 	<li><code>errors > 0</code> : sends a mail only if there are errors</li>
 	 * 	<li><code>skipped > failures</code> : sends mails if there are more skipped then failed test cases</li>
@@ -97,7 +97,7 @@ class SurefireMailMojo extends AbstractSenderMojo {
 		
 		// Analyze the test reports
 		TestReportUtil util = new TestReportUtil(log: getLog())
-		def suiteReports = util.getTestSuiteReport( testReportsDirectory, reportFilePattern)
+		def suiteReports = util.getTestSuiteReport( testReportsDirectory, reportFilePattern )
 		
 		////////////////////////////////////////////////////
 		//

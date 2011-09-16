@@ -18,7 +18,7 @@ class TestReportUtil {
 	
 	List<ch.fortysix.maven.plugin.postaman.surfire.TestSuiteReport> getTestSuiteReport(File reportDir, String reportFilePattern){
 		
-		log?.info("analyze: surefire reports...")
+		log?.info("analyze: surefire reports... @ $reportDir with pattern: [$reportFilePattern]")
 		
 		def suiteReports  = [] 
 		if(reportDir && reportDir.exists()){
