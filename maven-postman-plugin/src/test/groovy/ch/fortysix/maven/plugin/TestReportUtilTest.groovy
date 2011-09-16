@@ -29,7 +29,7 @@ import ch.fortysix.maven.report.support.HtmlExtractor;
 class TestReportUtilTest extends TestCase{
 
 	def testReportsDirectory = new File("src/test/resources")
-	def reportFilePattern = "TEST-NoSkipped.xml"
+	def reportFilePattern = "TEST-.*.xml"
 
 	public void testNoSkipped(){
 
@@ -37,8 +37,9 @@ class TestReportUtilTest extends TestCase{
 
 		TestReportUtil util = new TestReportUtil(log: log)
 		def suiteReports = util.getTestSuiteReport( testReportsDirectory, reportFilePattern)
+		println "...done"
 		Assert.assertNotNull "suitereports must not be null", suiteReports
-		Assert.assertTrue "there must be one report", suiteReports.size() == 1
+		Assert.assertTrue "there must be 3 reports", suiteReports.size() == 3
 		Assert.assertTrue "there must be 2 errors", suiteReports[0].errors == 2
 		Assert.assertTrue "there must be 0 skipped", suiteReports[0].skipped == 0
 		Assert.assertTrue "there must be 4 failures", suiteReports[0].failures == 4
