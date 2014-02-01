@@ -26,13 +26,13 @@
 		<repository>
 			<id>nexus-rel</id>
 			<name>Nexus Release Repo</name>
-			<url>http://192.168.1.40:8081/nexus/content/repositories/releases</url>
+			<url>http://elongatus.local:8081/nexus/content/repositories/releases</url>
 		</repository>
 		<snapshotRepository>
 			<uniqueVersion>true</uniqueVersion>
 			<id>nexus-snap</id>
 			<name>Nexus Snapshot Repo</name>
-			<url>http://192.168.1.40:8081/nexus/content/repositories/snapshots</url>
+			<url>http://elongatus.local:8081/nexus/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 	<build>
